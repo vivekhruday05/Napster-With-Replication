@@ -21,6 +21,7 @@ type Client struct {
 	ServerBase string
 	SharedDir  string
 	PeerAddr   string // public URL like http://host:port
+	BindAddr   string // local listen address host:port, e.g. :9000 or 0.0.0.0:9000
 	peerID     string
 }
 
@@ -49,13 +50,9 @@ func (c *Client) Serve() error {
 	go c.backgroundLoop(stop)
 	defer close(stop)
 
-	// determine listen address from PeerAddr
-	u, err := url.Parse(c.PeerAddr)
-	if err != nil {
-		return err
-	}
-	addr := u.Host // host:port
-	if addr == "" {
+	// determine listen address from BindAddr (separate from public PeerAddr)
+	addr := c.BindAddr
+	if strings.TrimSpace(addr) == "" {
 		addr = ":9000"
 	}
 	log.Printf("Peer %s serving files from %s on %s", c.peerID, c.SharedDir, addr)
