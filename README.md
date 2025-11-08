@@ -41,23 +41,39 @@ go build -o bin/client ./client
 
 ## Run
 
-1) Start the central server (default :8080):
+1) Start the central server. If you do not set `NAPSTER_SERVER_ADDR`, it now auto-detects a free port and prints the public URL (based on a non-loopback IPv4):
 
 ```
 NAPSTER_REPLICATION_FACTOR=2 ./bin/server
 ```
 
-Optional env:
-
-- NAPSTER_SERVER_ADDR: listen address (default ":8080").
-- NAPSTER_REPLICATION_FACTOR: minimum copies per file (default 2).
-
-2) Start two peers in separate terminals, each with its own shared directory and public address:
+Example log:
 
 ```
-./bin/client -cmd serve -server http://localhost:8080 -dir /tmp/peer1 -addr http://localhost:9000 -bind :9000 &
-./bin/client -cmd serve -server http://localhost:8080 -dir /tmp/peer2 -addr http://localhost:9001 -bind :9001 &
+Napster server listening on [::]:39745 (public URL: http://192.168.1.10:39745)
 ```
+
+Optional env overrides:
+
+- `NAPSTER_SERVER_ADDR`: Explicit listen address (e.g. `:8080` or `0.0.0.0:9000`). If bound to 0.0.0.0 without a host IP, the server additionally prints a derived public URL.
+- `NAPSTER_REPLICATION_FACTOR`: Minimum copies per file (default 2).
+
+2) Start two peers in separate terminals, each with its own shared directory. The client now auto-detects a non-loopback local IPv4 and chooses a free port if you omit `-addr` and `-bind`:
+
+```
+./bin/client -cmd serve -server http://localhost:8080 -dir /tmp/peer1 &
+./bin/client -cmd serve -server http://localhost:8080 -dir /tmp/peer2 &
+```
+
+On startup you'll see a log line like:
+
+```
+Using peer public address http://192.168.1.23:9137 and bind address :9137
+```
+
+Optional overrides if you need to pin values:
+- `-addr` public base URL other peers use (e.g. `http://192.168.1.23:9000`). If you specify a host without a port and also omit `-bind`, the chosen free port is appended.
+- `-bind` local listen address (e.g. `:9000` or `0.0.0.0:9000`). If omitted a free port is selected.
 
 Place some files in /tmp/peer1 and watch peer2 replicate after a short delay (depends on replication factor and task scheduling).
 
@@ -81,25 +97,19 @@ Place some files in /tmp/peer1 and watch peer2 replicate after a short delay (de
 
 ### Run across laptops (same network)
 
-- Start server listening on all interfaces (default) on the machine acting as tracker:
-	- Example on server host with IP 192.168.1.10:
-		- `NAPSTER_SERVER_ADDR=:8080 ./bin/server`
-	- Other laptops should use `-server http://192.168.1.10:8080`.
-- On each laptop, run the client and set:
-	- `-addr` to the publicly reachable base URL of that laptop (e.g., `http://192.168.1.11:9000`). This is what others use to download from you.
-	- `-bind` to the local listen address, usually `:9000` or `0.0.0.0:9000` to listen on all interfaces.
+- Start the server on the tracker machine. If you omit `NAPSTER_SERVER_ADDR`, it selects a free port and prints the public URL. If the server host IP is 192.168.1.10 you may force 8080 for convenience:
+	- `NAPSTER_SERVER_ADDR=:8080 ./bin/server`
+	- Other laptops use `-server http://192.168.1.10:8080` (or the auto-detected URL you saw in the server log).
+- On each laptop you can now simply run (auto-detected IP/port):
 
-Example on Laptop A (192.168.1.11):
+	```
+	./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerA
+	./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerB
+	```
 
-```
-./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerA -addr http://192.168.1.11:9000 -bind :9000
-```
+	Each client prints the public address it registered, e.g. `Using peer public address http://192.168.1.11:9142 and bind address :9142`.
 
-Example on Laptop B (192.168.1.12):
-
-```
-./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerB -addr http://192.168.1.12:9001 -bind :9001
-```
+If you prefer explicit ports (e.g. for firewall rules) still supply `-addr` and `-bind` as before.
 
 Ensure the machines are on the same network and routable. NAT traversal and firewall configuration are out of scope for this baseline.
 
@@ -124,18 +134,18 @@ Sanity check (from any machine):
 curl http://192.168.1.10:8080/healthz
 ```
 
-3) Start Peer A on laptop A (e.g., 192.168.1.11)
+3) Start Peer A on laptop A (auto detect address/port):
 
 ```
 mkdir -p /home/user/peerA
-./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerA -addr http://192.168.1.11:9000 -bind :9000
+./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerA
 ```
 
-4) Start Peer B on laptop B (e.g., 192.168.1.12)
+4) Start Peer B on laptop B:
 
 ```
 mkdir -p /home/user/peerB
-./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerB -addr http://192.168.1.12:9001 -bind :9001
+./bin/client -cmd serve -server http://192.168.1.10:8080 -dir /home/user/peerB
 ```
 
 5) Put a file on Peer A and verify listing from another machine
