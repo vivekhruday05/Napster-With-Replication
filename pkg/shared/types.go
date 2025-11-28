@@ -1,6 +1,9 @@
 package shared
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 // Peer represents a client node in the network.
 type Peer struct {
@@ -11,30 +14,50 @@ type Peer struct {
 
 // FileInfo represents a file shared by a peer.
 type FileInfo struct {
-	Name string `json:"name"`
-	Size int64  `json:"size"`
-	Hash string `json:"hash"` // optional content hash; client may leave empty
+	Name    string `json:"name"`
+	Size    int64  `json:"size"`
+	Hash    string `json:"hash"`
+	Version int64  `json:"version"` // NEW: Version number for consistency
 }
 
-// RegisterRequest is used by a peer to register/update its presence and file list.
+// --- NEW: Structures for Lease Management (Write Locking) ---
+
+type LeaseRequest struct {
+	PeerID   string `json:"peerId"`
+	FileName string `json:"fileName"`
+}
+
+type LeaseResponse struct {
+	Granted    bool      `json:"granted"`
+	Expiration time.Time `json:"expiration"`
+	Message    string    `json:"message"`
+}
+
+// --- NEW: Structures for Shadow Master Replication ---
+
+// SyncOp is sent from Primary -> Shadow to keep state consistent.
+type SyncOp struct {
+	OpType string          `json:"opType"` // "register", "announce", "prune"
+	Data   json.RawMessage `json:"data"`   // Raw JSON to be decoded based on OpType
+}
+
+// --- Existing Structures ---
+
 type RegisterRequest struct {
 	Peer  Peer       `json:"peer"`
 	Files []FileInfo `json:"files"`
 }
 
-// ReplicationTask instructs a peer to fetch a file from another peer.
 type ReplicationTask struct {
 	File       FileInfo `json:"file"`
 	SourcePeer Peer     `json:"sourcePeer"`
 }
 
-// RegisterResponse may include replication tasks for the registering peer.
 type RegisterResponse struct {
 	OK    bool              `json:"ok"`
 	Tasks []ReplicationTask `json:"tasks"`
 }
 
-// HeartbeatRequest/Response keep a peer alive and optionally deliver tasks.
 type HeartbeatRequest struct {
 	PeerID string `json:"peerId"`
 }
@@ -44,7 +67,6 @@ type HeartbeatResponse struct {
 	Tasks []ReplicationTask `json:"tasks"`
 }
 
-// SearchResponse returns matching files and the peers hosting them.
 type SearchResponse struct {
 	Matches []SearchMatch `json:"matches"`
 }
@@ -54,7 +76,6 @@ type SearchMatch struct {
 	Peers []Peer   `json:"peers"`
 }
 
-// AnnounceRequest indicates a peer has obtained a file (e.g., after download/replication).
 type AnnounceRequest struct {
 	Peer Peer     `json:"peer"`
 	File FileInfo `json:"file"`
