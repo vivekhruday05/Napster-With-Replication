@@ -3,10 +3,12 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -41,7 +43,7 @@ type Server struct {
 func NewServer() *Server {
 	replica := 2
 	if v := os.Getenv("NAPSTER_REPLICATION_FACTOR"); v != "" {
-		if n, err := strconvAtoiSafe(v); err == nil && n > 0 {
+		if n, err := strconv.Atoi(v); err == nil && n > 0 {
 			replica = n
 		}
 	}
@@ -61,39 +63,23 @@ func NewServer() *Server {
 	return s
 }
 
-func strconvAtoiSafe(s string) (int, error) {
-	var n int
-	for _, ch := range s {
-		if ch < '0' || ch > '9' {
-			return 0, fmtError("non-numeric")
-		}
-		n = n*10 + int(ch-'0')
-	}
-	return n, nil
-}
-
-func fmtError(msg string) error { return &simpleError{msg} }
-
-type simpleError struct{ s string }
-
-func (e *simpleError) Error() string { return e.s }
-
 func (s *Server) cleanupLoop() {
 	t := time.NewTicker(10 * time.Second)
 	defer t.Stop()
 	for range t.C {
+		log.Printf("[cleanup] running pruneStale (peerTTL=%s, peers=%d)", s.peerTTL, len(s.peers))
 		s.pruneStale()
 	}
 }
 
 func (s *Server) pruneStale() {
-	now := time.Now()
+	now := time.Now().UTC()
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	for id, p := range s.peers {
 		if now.Sub(p.LastSeen) > s.peerTTL {
-			log.Printf("peer %s stale; removing", id)
-			
+			log.Printf("[prune] peer=%s addr=%s lastSeen=%s age=%s > ttl=%s -> removing", id, p.Addr, p.LastSeen.Format(time.RFC3339), now.Sub(p.LastSeen), s.peerTTL)
+
 			// NEW: Sync prune event to shadow
 			go s.syncToShadow("prune", id)
 
@@ -102,6 +88,7 @@ func (s *Server) pruneStale() {
 					if fe, ok2 := s.files[fname]; ok2 {
 						delete(fe.Peers, id)
 						if len(fe.Peers) == 0 {
+							log.Printf("[prune] file=%s had only stale peer; removing file entry", fname)
 							delete(s.files, fname)
 						}
 					}
@@ -115,12 +102,13 @@ func (s *Server) pruneStale() {
 }
 
 func registerRoutes(mux *http.ServeMux, srv *Server) {
+	log.Printf("[routes] registering HTTP routes; shadow=%s replicationFactor=%d ttl=%s", srv.ShadowAddr, srv.replicationFactor, srv.peerTTL)
 	mux.HandleFunc("/register", srv.handleRegister)
 	mux.HandleFunc("/heartbeat", srv.handleHeartbeat)
 	mux.HandleFunc("/search", srv.handleSearch)
 	mux.HandleFunc("/peers", srv.handlePeers)
 	mux.HandleFunc("/announce", srv.handleAnnounce)
-	
+
 	// NEW ROUTES
 	mux.HandleFunc("/lease", srv.handleLease)
 	mux.HandleFunc("/sync", srv.handleSync)
@@ -142,6 +130,7 @@ func decodeJSON[T any](w http.ResponseWriter, r *http.Request, dst *T) bool {
 
 func (s *Server) syncToShadow(opType string, data interface{}) {
 	if s.ShadowAddr == "" {
+		log.Printf("[shadow] skip sync op=%s (no shadow configured)", opType)
 		return
 	}
 	// Marshal the inner data first to RawMessage
@@ -150,42 +139,66 @@ func (s *Server) syncToShadow(opType string, data interface{}) {
 		OpType: opType,
 		Data:   json.RawMessage(inner),
 	}
-	
+
 	b, _ := json.Marshal(payload)
 	// Fire and forget: don't block the primary server's main thread
 	go func() {
-		// Basic retry logic or just one-shot
-		http.Post(s.ShadowAddr+"/sync", "application/json", bytes.NewReader(b))
+		start := time.Now()
+		resp, err := http.Post(s.ShadowAddr+"/sync", "application/json", bytes.NewReader(b))
+		dur := time.Since(start)
+		if err != nil {
+			log.Printf("[shadow] sync op=%s error=%v dur=%s", opType, err, dur)
+			return
+		}
+		io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+		log.Printf("[shadow] sync op=%s status=%s dur=%s", opType, resp.Status, dur)
 	}()
 }
 
 // handleSync is called on the SHADOW server to apply updates from Primary
 func (s *Server) handleSync(w http.ResponseWriter, r *http.Request) {
+	log.Printf("[shadow] handleSync from=%s", r.RemoteAddr)
 	var op shared.SyncOp
-	if !decodeJSON(w, r, &op) { return }
+	if !decodeJSON(w, r, &op) {
+		log.Printf("[shadow] handleSync decode error")
+		return
+	}
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	switch op.OpType {
 	case "register":
+		log.Printf("[shadow] apply register")
 		var req shared.RegisterRequest
 		if err := json.Unmarshal(op.Data, &req); err == nil {
 			s.applyRegister(req)
 		}
 	case "announce":
+		log.Printf("[shadow] apply announce")
 		var req shared.AnnounceRequest
 		if err := json.Unmarshal(op.Data, &req); err == nil {
 			s.applyAnnounce(req)
 		}
 	case "prune":
+		log.Printf("[shadow] apply prune")
 		var peerID string
 		if err := json.Unmarshal(op.Data, &peerID); err == nil {
 			// simplified prune logic for shadow (just delete)
 			delete(s.peers, peerID)
 			delete(s.peerFiles, peerID)
-			// Deep clean not fully implemented in this snippet for brevity, 
+			// Deep clean not fully implemented in this snippet for brevity,
 			// but removing from s.peers prevents it from showing in search.
+		}
+	case "heartbeat":
+		log.Printf("[shadow] apply heartbeat")
+		var req shared.HeartbeatRequest
+		if err := json.Unmarshal(op.Data, &req); err == nil {
+			if p, ok := s.peers[req.PeerID]; ok {
+				p.LastSeen = time.Now().UTC()
+				s.peers[req.PeerID] = p
+			}
 		}
 	}
 	w.WriteHeader(200)
@@ -193,13 +206,15 @@ func (s *Server) handleSync(w http.ResponseWriter, r *http.Request) {
 
 // Helper to apply register logic (reused by Sync and HandleRegister)
 func (s *Server) applyRegister(req shared.RegisterRequest) {
+	log.Printf("[register] peer=%s addr=%s files=%d", req.Peer.ID, req.Peer.Addr, len(req.Files))
 	p := req.Peer
-	p.LastSeen = time.Now()
+	p.LastSeen = time.Now().UTC()
 	s.peers[p.ID] = p
 	if _, ok := s.peerFiles[p.ID]; !ok {
 		s.peerFiles[p.ID] = make(map[string]struct{})
 	}
 	for _, f := range req.Files {
+		log.Printf("[register] file=%s size=%d version=%d host=%s", f.Name, f.Size, f.Version, p.ID)
 		fe := s.files[f.Name]
 		if fe == nil {
 			fe = &fileEntry{Info: f, Peers: make(map[string]shared.Peer)}
@@ -216,7 +231,12 @@ func (s *Server) applyRegister(req shared.RegisterRequest) {
 
 // Helper to apply announce logic
 func (s *Server) applyAnnounce(req shared.AnnounceRequest) {
+	log.Printf("[announce] peer=%s addr=%s file=%s version=%d", req.Peer.ID, req.Peer.Addr, req.File.Name, req.File.Version)
 	p := req.Peer
+	// Ensure LastSeen is set so we don't overwrite a healthy peer with zero time
+	if p.LastSeen.IsZero() {
+		p.LastSeen = time.Now().UTC()
+	}
 	s.peers[p.ID] = p
 	if _, ok := s.peerFiles[p.ID]; !ok {
 		s.peerFiles[p.ID] = make(map[string]struct{})
@@ -237,34 +257,40 @@ func (s *Server) applyAnnounce(req shared.AnnounceRequest) {
 
 func (s *Server) handleLease(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", 405)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	log.Printf("[lease] from=%s", r.RemoteAddr)
 	var req shared.LeaseRequest
-	if !decodeJSON(w, r, &req) { return }
+	if !decodeJSON(w, r, &req) {
+		log.Printf("[lease] bad json")
+		return
+	}
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	fe, exists := s.files[req.FileName]
-	
+
 	// Check if leased
+	log.Printf("[lease] request peer=%s file=%s", req.PeerID, req.FileName)
 	if exists && fe.Lease != nil {
 		if time.Now().Before(fe.Lease.Expiration) && fe.Lease.HolderID != req.PeerID {
 			json.NewEncoder(w).Encode(shared.LeaseResponse{
 				Granted: false,
 				Message: "Lease currently held by " + fe.Lease.HolderID,
 			})
+			log.Printf("[lease] denied: heldBy=%s until=%s", fe.Lease.HolderID, fe.Lease.Expiration.Format(time.RFC3339))
 			return
 		}
 	}
 
 	// Grant Lease (60s duration)
-	exp := time.Now().Add(60 * time.Second)
+	exp := time.Now().UTC().Add(60 * time.Second)
 	if !exists {
 		// Create placeholder
 		s.files[req.FileName] = &fileEntry{
-			Info: shared.FileInfo{Name: req.FileName},
+			Info:  shared.FileInfo{Name: req.FileName},
 			Peers: make(map[string]shared.Peer),
 		}
 		fe = s.files[req.FileName]
@@ -275,17 +301,22 @@ func (s *Server) handleLease(w http.ResponseWriter, r *http.Request) {
 		Granted:    true,
 		Expiration: exp,
 	})
+	log.Printf("[lease] granted: peer=%s file=%s exp=%s", req.PeerID, req.FileName, exp.Format(time.RFC3339))
 }
 
 // --- Existing Handlers (Updated) ---
 
 func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", 405)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	log.Printf("[register] from=%s", r.RemoteAddr)
 	var req shared.RegisterRequest
-	if !decodeJSON(w, r, &req) { return }
+	if !decodeJSON(w, r, &req) {
+		log.Printf("[register] bad json")
+		return
+	}
 
 	// Sync to Shadow
 	go s.syncToShadow("register", req)
@@ -298,25 +329,31 @@ func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
 	s.mu.Unlock()
 
 	json.NewEncoder(w).Encode(shared.RegisterResponse{OK: true, Tasks: tasks})
+	log.Printf("[register] ok peer=%s tasks=%d", req.Peer.ID, len(tasks))
 }
 
 func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", 405)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	log.Printf("[announce] from=%s", r.RemoteAddr)
 	var req shared.AnnounceRequest
-	if !decodeJSON(w, r, &req) { return }
+	if !decodeJSON(w, r, &req) {
+		log.Printf("[announce] bad json")
+		return
+	}
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	fe := s.files[req.File.Name]
-	
+
 	// NEW: Verify Lease if version is increasing
 	if fe != nil && req.File.Version > fe.Info.Version {
-		if fe.Lease == nil || fe.Lease.HolderID != req.Peer.ID || time.Now().After(fe.Lease.Expiration) {
-			http.Error(w, "Lease required to update file version", 403)
+		if fe.Lease == nil || fe.Lease.HolderID != req.Peer.ID || time.Now().UTC().After(fe.Lease.Expiration) {
+			http.Error(w, "Lease required to update file version", http.StatusForbidden)
+			log.Printf("[announce] rejected: lease missing/expired for peer=%s file=%s", req.Peer.ID, req.File.Name)
 			return
 		}
 	}
@@ -326,6 +363,10 @@ func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 
 	// Apply logic
 	p := req.Peer
+	// Preserve or set LastSeen to now to avoid marking peer stale
+	if p.LastSeen.IsZero() {
+		p.LastSeen = time.Now().UTC()
+	}
 	s.peers[p.ID] = p
 	if _, ok := s.peerFiles[p.ID]; !ok {
 		s.peerFiles[p.ID] = make(map[string]struct{})
@@ -334,7 +375,7 @@ func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 		fe = &fileEntry{Info: req.File, Peers: make(map[string]shared.Peer)}
 		s.files[req.File.Name] = fe
 	}
-	
+
 	// Update version if newer
 	if req.File.Version >= fe.Info.Version {
 		fe.Info = req.File
@@ -344,34 +385,49 @@ func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 
 	s.planReplicationLocked()
 	w.WriteHeader(204)
+	log.Printf("[announce] ok peer=%s file=%s version=%d", p.ID, req.File.Name, req.File.Version)
 }
+
+// In server/server.go
 
 func (s *Server) handleHeartbeat(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", 405)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	log.Printf("[heartbeat] from=%s", r.RemoteAddr)
 	var req shared.HeartbeatRequest
-	if !decodeJSON(w, r, &req) { return }
+	if !decodeJSON(w, r, &req) {
+		log.Printf("[heartbeat] bad json")
+		return
+	}
+
+	// NEW: Sync Heartbeat to Shadow so it doesn't kill the peer
+	go s.syncToShadow("heartbeat", req)
 
 	s.mu.Lock()
 	p, ok := s.peers[req.PeerID]
 	if ok {
-		p.LastSeen = time.Now()
+		p.LastSeen = time.Now().UTC()
 		s.peers[req.PeerID] = p
 	}
+	// If peer is not found (server restarted?), we could optionally tell client to re-register.
+	// For now, just return tasks.
 	tasks := s.queue[req.PeerID]
 	s.queue[req.PeerID] = nil
 	s.mu.Unlock()
-	json.NewEncoder(w).Encode(shared.HeartbeatResponse{OK: true, Tasks: tasks})
+
+	json.NewEncoder(w).Encode(shared.HeartbeatResponse{OK: ok, Tasks: tasks})
+	log.Printf("[heartbeat] peer=%s ok=%t tasks=%d", req.PeerID, ok, len(tasks))
 }
 
 func (s *Server) handleSearch(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", 405)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	q := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("q")))
+	log.Printf("[search] q=%q", q)
 	res := shared.SearchResponse{}
 
 	s.mu.Lock()
@@ -389,14 +445,16 @@ func (s *Server) handleSearch(w http.ResponseWriter, r *http.Request) {
 	s.mu.Unlock()
 
 	json.NewEncoder(w).Encode(res)
+	log.Printf("[search] matches=%d", len(res.Matches))
 }
 
 func (s *Server) handlePeers(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", 405)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	name := r.URL.Query().Get("file")
+	log.Printf("[peers] file=%s", name)
 	var peers []shared.Peer
 	var info shared.FileInfo
 	ok := false
@@ -413,15 +471,21 @@ func (s *Server) handlePeers(w http.ResponseWriter, r *http.Request) {
 	s.mu.Unlock()
 	if !ok {
 		http.Error(w, "not found", 404)
+		log.Printf("[peers] not found file=%s", name)
 		return
 	}
 	json.NewEncoder(w).Encode(shared.SearchMatch{File: info, Peers: peers})
+	log.Printf("[peers] file=%s peers=%d", name, len(peers))
 }
 
 func (s *Server) planReplicationLocked() {
+	log.Printf("[replication] planning for %d files", len(s.files))
 	for _, fe := range s.files {
 		needed := s.replicationFactor - len(fe.Peers)
 		if needed <= 0 || len(fe.Peers) == 0 {
+			if needed <= 0 {
+				log.Printf("[replication] file=%s already satisfies factor (have=%d need=%d)", fe.Info.Name, len(fe.Peers), s.replicationFactor)
+			}
 			continue
 		}
 		var targets []shared.Peer
@@ -431,6 +495,7 @@ func (s *Server) planReplicationLocked() {
 			}
 		}
 		if len(targets) == 0 {
+			log.Printf("[replication] file=%s no eligible targets", fe.Info.Name)
 			continue
 		}
 		sort.Slice(targets, func(i, j int) bool { return targets[i].ID < targets[j].ID })
@@ -443,6 +508,7 @@ func (s *Server) planReplicationLocked() {
 		for i := 0; i < needed && i < len(targets); i++ {
 			peer := targets[i]
 			s.queue[peer.ID] = append(s.queue[peer.ID], shared.ReplicationTask{File: fe.Info, SourcePeer: src})
+			log.Printf("[replication] enqueue peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
 		}
 	}
 }

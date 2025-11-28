@@ -19,11 +19,11 @@ import (
 )
 
 type Client struct {
-	Servers    []string // UPDATED: List of servers (Primary, Shadow)
-	SharedDir  string
-	PeerAddr   string
-	BindAddr   string
-	peerID     string
+	Servers   []string // UPDATED: List of servers (Primary, Shadow)
+	SharedDir string
+	PeerAddr  string
+	BindAddr  string
+	peerID    string
 }
 
 // EnsureDir creates the shared folder
@@ -43,6 +43,7 @@ func (c *Client) peerIDFromAddr() string {
 func (c *Client) doRequest(method, path string, body any, out any) error {
 	var lastErr error
 	for _, base := range c.Servers {
+		start := time.Now()
 		var reqBody io.Reader
 		if body != nil {
 			b, _ := json.Marshal(body)
@@ -59,18 +60,25 @@ func (c *Client) doRequest(method, path string, body any, out any) error {
 
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
-			log.Printf("Failed to contact %s: %v. Trying next...", base, err)
+			log.Printf("[client] request %s %s base=%s error=%v dur=%s", method, path, base, err, time.Since(start))
 			lastErr = err
 			continue
 		}
 		defer resp.Body.Close()
 
-		if resp.StatusCode >= 300 {
-			// If server returns error like 404/403, we generally shouldn't try the shadow 
-			// because it implies the server IS working but rejected us.
-			// But for connection errors, we continue.
+		// Failover logic:
+		// - Don't retry on 4xx client errors (e.g., 403 Forbidden, 404 Not Found)
+		//   as these are intentional rejections from the primary server.
+		// - Retry on 5xx server errors or network issues, as the shadow may be healthy.
+		if resp.StatusCode >= 400 && resp.StatusCode < 500 {
 			b, _ := io.ReadAll(resp.Body)
-			return fmt.Errorf("%s returned %s: %s", base, resp.Status, string(b))
+			log.Printf("[client] request %s %s base=%s status=%s clientError body=%s", method, path, base, resp.Status, string(b))
+			return fmt.Errorf("%s returned client error %s: %s", base, resp.Status, string(b))
+		}
+		if resp.StatusCode >= 500 {
+			log.Printf("[client] request %s %s base=%s status=%s -> will try next", method, path, base, resp.Status)
+			lastErr = fmt.Errorf("%s returned server error %s", base, resp.Status)
+			continue
 		}
 
 		if out != nil {
@@ -78,6 +86,7 @@ func (c *Client) doRequest(method, path string, body any, out any) error {
 				return err
 			}
 		}
+		log.Printf("[client] request %s %s base=%s status=%s dur=%s", method, path, base, resp.Status, time.Since(start))
 		return nil // Success
 	}
 	if lastErr != nil {
@@ -103,22 +112,35 @@ func (c *Client) Serve() error {
 	if strings.TrimSpace(addr) == "" {
 		addr = ":9000"
 	}
-	log.Printf("Peer %s serving files from %s on %s", c.peerID, c.SharedDir, addr)
+	log.Printf("[peer] id=%s dir=%s bind=%s addr=%s servers=%v", c.peerID, c.SharedDir, addr, c.PeerAddr, c.Servers)
 	return http.ListenAndServe(addr, mux)
 }
 
 func (c *Client) backgroundLoop(stop <-chan struct{}) {
+	// Register immediately
+	if err := c.registerNow(); err != nil {
+		log.Printf("initial register error: %v", err)
+	}
+
+	// Then, start the heartbeat loop.
+	// The heartbeat interval should be less than the server's peerTTL.
+	// A good value is around 2/3 of the TTL.
+	// Keep heartbeat comfortably below server TTL (45s)
+	heartbeatTicker := time.NewTicker(20 * time.Second)
+	defer heartbeatTicker.Stop()
+
 	for {
-		if err := c.registerNow(); err != nil {
-			log.Printf("register error: %v", err)
-		}
 		select {
-		case <-time.After(15 * time.Second):
+		case <-heartbeatTicker.C:
+			if err := c.heartbeatNow(); err != nil {
+				log.Printf("heartbeat error: %v", err)
+				// If heartbeat fails, try to re-register
+				if err := c.registerNow(); err != nil {
+					log.Printf("re-register after heartbeat failure error: %v", err)
+				}
+			}
 		case <-stop:
 			return
-		}
-		if err := c.heartbeatNow(); err != nil {
-			log.Printf("heartbeat error: %v", err)
 		}
 	}
 }
@@ -138,7 +160,7 @@ func (c *Client) scanFiles() ([]shared.FileInfo, error) {
 		if err != nil {
 			continue
 		}
-		// For the project, simple scan. 
+		// For the project, simple scan.
 		// Note: Versions are managed via 'update' command mostly.
 		files = append(files, shared.FileInfo{Name: name, Size: fi.Size()})
 	}
@@ -154,11 +176,13 @@ func (c *Client) registerNow() error {
 	peer := shared.Peer{ID: c.peerIDFromAddr(), Addr: c.PeerAddr}
 	req := shared.RegisterRequest{Peer: peer, Files: files}
 	var resp shared.RegisterResponse
-	
+
 	// Use doRequest (Failover)
 	if err := c.doRequest("POST", "/register", req, &resp); err != nil {
+		log.Printf("[client] register error: %v", err)
 		return err
 	}
+	log.Printf("[client] register ok tasks=%d", len(resp.Tasks))
 	c.processTasks(resp.Tasks)
 	return nil
 }
@@ -167,21 +191,39 @@ func (c *Client) heartbeatNow() error {
 	req := shared.HeartbeatRequest{PeerID: c.peerIDFromAddr()}
 	var resp shared.HeartbeatResponse
 	if err := c.doRequest("POST", "/heartbeat", req, &resp); err != nil {
+		log.Printf("[client] heartbeat error: %v", err)
 		return err
 	}
+	if !resp.OK {
+		log.Printf("[client] heartbeat not OK -> re-register")
+		return c.registerNow()
+	}
+	log.Printf("[client] heartbeat ok tasks=%d", len(resp.Tasks))
 	c.processTasks(resp.Tasks)
 	return nil
 }
 
+// In client/client.go
+
 func (c *Client) processTasks(tasks []shared.ReplicationTask) {
 	for _, t := range tasks {
-		log.Printf("replication task: pull %s from %s", t.File.Name, t.SourcePeer.Addr)
-		if err := c.pullFile(t.SourcePeer.Addr, t.File.Name); err != nil {
-			log.Printf("replication failed for %s: %v", t.File.Name, err)
-			continue
-		}
-		// Announce: Note, replication copies the version too in a real system
-		_ = c.doRequest("POST", "/announce", shared.AnnounceRequest{Peer: shared.Peer{ID: c.peerIDFromAddr(), Addr: c.PeerAddr}, File: t.File}, nil)
+		// NEW: Run in background so we don't block the heartbeat loop
+		go func(task shared.ReplicationTask) {
+			log.Printf("[client] replication: pulling file=%s from=%s", task.File.Name, task.SourcePeer.Addr)
+			if err := c.pullFile(task.SourcePeer.Addr, task.File.Name); err != nil {
+				log.Printf("[client] replication failed file=%s err=%v", task.File.Name, err)
+				return
+			}
+			// Announce
+			if err := c.doRequest("POST", "/announce", shared.AnnounceRequest{
+				Peer: shared.Peer{ID: c.peerIDFromAddr(), Addr: c.PeerAddr},
+				File: task.File,
+			}, nil); err != nil {
+				log.Printf("[client] replication announce failed file=%s err=%v", task.File.Name, err)
+				return
+			}
+			log.Printf("[client] replication: announced file=%s", task.File.Name)
+		}(t)
 	}
 }
 
@@ -189,7 +231,7 @@ func (c *Client) processTasks(tasks []shared.ReplicationTask) {
 
 func (c *Client) UpdateFile(filename string) error {
 	// 1. Acquire Lease
-	log.Printf("Requesting lease for %s...", filename)
+	log.Printf("[client] update: requesting lease for file=%s", filename)
 	leaseReq := shared.LeaseRequest{PeerID: c.peerIDFromAddr(), FileName: filename}
 	var leaseResp shared.LeaseResponse
 	if err := c.doRequest("POST", "/lease", leaseReq, &leaseResp); err != nil {
@@ -198,7 +240,7 @@ func (c *Client) UpdateFile(filename string) error {
 	if !leaseResp.Granted {
 		return fmt.Errorf("lease denied: %s", leaseResp.Message)
 	}
-	log.Printf("Lease acquired! Valid until %v", leaseResp.Expiration)
+	log.Printf("[client] update: lease acquired exp=%s", leaseResp.Expiration.Format(time.RFC3339))
 
 	// 2. Simulate "Edit" by just reading current stats and incrementing version
 	path := filepath.Join(c.SharedDir, filename)
@@ -209,7 +251,7 @@ func (c *Client) UpdateFile(filename string) error {
 
 	// In a real app, you'd fetch the current version from server first.
 	// Here we just use a timestamp based version for monotonicity
-	newVersion := time.Now().UnixNano()
+	newVersion := time.Now().UTC().UnixNano()
 
 	updatedInfo := shared.FileInfo{
 		Name:    filename,
@@ -225,7 +267,7 @@ func (c *Client) UpdateFile(filename string) error {
 	if err := c.doRequest("POST", "/announce", req, nil); err != nil {
 		return err
 	}
-	log.Printf("File %s updated to version %d", filename, newVersion)
+	log.Printf("[client] update: announced file=%s version=%d", filename, newVersion)
 	return nil
 }
 
@@ -261,7 +303,7 @@ func (c *Client) handleGetFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer f.Close()
-	http.ServeContent(w, r, name, time.Now(), f)
+	http.ServeContent(w, r, name, time.Now().UTC(), f)
 }
 
 func (c *Client) Search(query string) error {
@@ -271,7 +313,7 @@ func (c *Client) Search(query string) error {
 		return err
 	}
 	if len(sr.Matches) == 0 {
-		log.Printf("no matches for %q", query)
+		log.Printf("[client] search: no matches for %q", query)
 		return nil
 	}
 	for _, m := range sr.Matches {
@@ -279,7 +321,7 @@ func (c *Client) Search(query string) error {
 		for _, p := range m.Peers {
 			hosts = append(hosts, p.Addr)
 		}
-		log.Printf("%s (v%d, %d bytes) => %s", m.File.Name, m.File.Version, m.File.Size, strings.Join(hosts, ", "))
+		log.Printf("[client] search: %s (v%d, %d bytes) => %s", m.File.Name, m.File.Version, m.File.Size, strings.Join(hosts, ", "))
 	}
 	return nil
 }
@@ -293,6 +335,7 @@ func (c *Client) Get(name string) error {
 	}
 
 	if len(match.Peers) == 0 {
+		log.Printf("[client] get: no peers for file=%s", name)
 		return errors.New("no peers hosting that file")
 	}
 	// Pick first peer
@@ -301,12 +344,23 @@ func (c *Client) Get(name string) error {
 		return err
 	}
 	// Announce ownership
-	return c.doRequest("POST", "/announce", shared.AnnounceRequest{Peer: shared.Peer{ID: c.peerIDFromAddr(), Addr: c.PeerAddr}, File: match.File}, nil)
+	err := c.doRequest("POST", "/announce", shared.AnnounceRequest{Peer: shared.Peer{ID: c.peerIDFromAddr(), Addr: c.PeerAddr}, File: match.File}, nil)
+	if err != nil {
+		log.Printf("[client] get: announce failed file=%s err=%v", name, err)
+		return err
+	}
+	log.Printf("[client] get: announced file=%s", name)
+	return nil
 }
 
 func (c *Client) pullFile(peerBase, name string) error {
 	u := strings.TrimRight(peerBase, "/") + "/files/" + url.PathEscape(name)
-	resp, err := http.Get(u)
+
+	// NEW: Use a client with timeout
+	client := http.Client{Timeout: 10 * time.Second}
+	log.Printf("[client] download: GET %s", u)
+	resp, err := client.Get(u)
+
 	if err != nil {
 		return err
 	}
@@ -321,6 +375,9 @@ func (c *Client) pullFile(peerBase, name string) error {
 	}
 	defer f.Close()
 	_, err = io.Copy(f, resp.Body)
+	if err == nil {
+		log.Printf("[client] download: saved file=%s to=%s", name, path)
+	}
 	return err
 }
 
@@ -330,7 +387,7 @@ func (c *Client) ListLocal() error {
 		return err
 	}
 	for _, f := range files {
-		log.Printf("%s (%d bytes)", f.Name, f.Size)
+		log.Printf("[client] local: %s (%d bytes)", f.Name, f.Size)
 	}
 	return nil
 }
