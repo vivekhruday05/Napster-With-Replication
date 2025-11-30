@@ -1,0 +1,1705 @@
+2025/11/30 16:35:41 [routes] registering HTTP routes; shadow= replicationFactor=2 ttl=45s
+2025/11/30 16:35:41 Napster server listening on :8081
+2025/11/30 16:35:41 Napster server public URL: http://10.2.141.219:8081
+2025/11/30 16:35:45 [shadow] handleSync from=127.0.0.1:39806
+2025/11/30 16:35:45 [shadow] apply register
+2025/11/30 16:35:45 [register] peer=peer_rep_1 addr=http://192.168.1.4:9000 files=1
+2025/11/30 16:35:45 [register] file=replication_test.txt size=1234 version=1 host=peer_rep_1
+2025/11/30 16:35:45 [shadow] handleSync from=127.0.0.1:39806
+2025/11/30 16:35:45 [shadow] apply register
+2025/11/30 16:35:45 [register] peer=peer_rep_2 addr=http://192.168.1.57:9000 files=0
+2025/11/30 16:35:45 [shadow] handleSync from=127.0.0.1:39806
+2025/11/30 16:35:45 [shadow] apply announce
+2025/11/30 16:35:45 [announce] peer=peer_rep_2 addr=http://192.168.1.57:9000 file=replication_test.txt version=1
+2025/11/30 16:35:45 [shadow] handleSync from=127.0.0.1:39806
+2025/11/30 16:35:45 [shadow] apply register
+2025/11/30 16:35:45 [register] peer=peer_ver_1 addr=http://192.168.1.159:9000 files=1
+2025/11/30 16:35:45 [register] file=ver_test.txt size=100 version=1 host=peer_ver_1
+2025/11/30 16:35:45 [shadow] handleSync from=127.0.0.1:39806
+2025/11/30 16:35:45 [shadow] apply announce
+2025/11/30 16:35:45 [announce] peer=peer_ver_1 addr=x file=ver_test.txt version=2
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_0 addr=http://192.168.1.206:9000 files=5
+2025/11/30 16:35:50 [register] file=file_ZLAYt.txt size=4369 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_eAFOK.txt size=49526 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_nRC24.txt size=3538 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_XBrDu.txt size=45581 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_byurq.txt size=34043 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_1 addr=http://192.168.1.125:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Jw3Hr.txt size=26286 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_bGx1W.txt size=30111 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_gU7da.txt size=8056 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_Sp7lY.txt size=44797 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_Trjlp.txt size=7861 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_5 addr=http://192.168.1.189:9000 files=5
+2025/11/30 16:35:50 [register] file=file_lFvVy.txt size=4710 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_uj4Nk.txt size=17335 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_sh0cP.txt size=47442 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_IEVTr.txt size=5924 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_TZmFz.txt size=45785 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_6 addr=http://192.168.1.179:9000 files=5
+2025/11/30 16:35:50 [register] file=file_rUfTJ.txt size=31829 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_Fqqu9.txt size=23904 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_ar8oS.txt size=31228 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_Q8ACC.txt size=30336 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_v28Ck.txt size=37979 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_2 addr=http://192.168.1.152:9000 files=5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [register] file=file_xmTnI.txt size=32873 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_T7q4K.txt size=17763 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_2m4TI.txt size=21337 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_mB4BB.txt size=2156 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_kbBs8.txt size=26842 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_8 addr=http://192.168.1.216:9000 files=5
+2025/11/30 16:35:50 [register] file=file_DMSQV.txt size=37412 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_iEK21.txt size=44115 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_fGLAX.txt size=10631 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_2IOwd.txt size=28481 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_lVEI5.txt size=9644 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_3 addr=http://192.168.1.36:9000 files=5
+2025/11/30 16:35:50 [register] file=file_LvXNO.txt size=47693 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_yxWp3.txt size=44825 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_cE2i1.txt size=35834 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_HuUf6.txt size=1839 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_oFRE4.txt size=26442 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_4 addr=http://192.168.1.167:9000 files=5
+2025/11/30 16:35:50 [register] file=file_QkCng.txt size=43769 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_GTWVG.txt size=33505 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_uekM0.txt size=14224 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_Vxve0.txt size=19312 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_eoCgR.txt size=14807 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_10 addr=http://192.168.1.249:9000 files=5
+2025/11/30 16:35:50 [register] file=file_I93p6.txt size=45791 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_LKnYb.txt size=48613 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_GyFen.txt size=47566 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_gqsSg.txt size=8844 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_qMHjT.txt size=47536 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_12 addr=http://192.168.1.160:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Eum3e.txt size=17101 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_2a4XK.txt size=37255 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_Prrr8.txt size=41652 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_AJHYt.txt size=19894 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_XOeR3.txt size=39002 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_13 addr=http://192.168.1.4:9000 files=5
+2025/11/30 16:35:50 [register] file=file_lLfDm.txt size=27630 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_nh5Fg.txt size=35208 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_en77R.txt size=46922 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_oSYbl.txt size=45941 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_ENgbq.txt size=4965 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_14 addr=http://192.168.1.54:9000 files=5
+2025/11/30 16:35:50 [register] file=file_9TExE.txt size=40845 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_lIIxB.txt size=15022 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_Yr8ZY.txt size=23536 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_C9O7R.txt size=36035 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_tx55b.txt size=42656 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_18 addr=http://192.168.1.240:9000 files=5
+2025/11/30 16:35:50 [register] file=file_C2g1A.txt size=22776 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_uwnW7.txt size=1826 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_rZG6O.txt size=25558 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_V3FKp.txt size=36401 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_LxKij.txt size=22634 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_19 addr=http://192.168.1.33:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Kjsqv.txt size=30985 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_zG4ai.txt size=19273 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_D19yE.txt size=8432 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_cpcht.txt size=17823 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_Cxa69.txt size=20223 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_11 addr=http://192.168.1.223:9000 files=5
+2025/11/30 16:35:50 [register] file=file_csFiM.txt size=10272 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_oGa4R.txt size=31411 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_AukEs.txt size=11106 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_dzhUe.txt size=13479 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_68PPc.txt size=36271 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_15 addr=http://192.168.1.10:9000 files=5
+2025/11/30 16:35:50 [register] file=file_7PlWl.txt size=42681 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_AVqs9.txt size=32788 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_84NBV.txt size=2964 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_I74xP.txt size=36454 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_48ng2.txt size=14334 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_9 addr=http://192.168.1.178:9000 files=5
+2025/11/30 16:35:50 [register] file=file_fxYvN.txt size=33386 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_bf1Xp.txt size=7621 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_gFmy8.txt size=35423 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_pf4c7.txt size=34364 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_OI0qz.txt size=4380 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_7 addr=http://192.168.1.194:9000 files=5
+2025/11/30 16:35:50 [register] file=file_rCpRF.txt size=11628 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_m8J2Y.txt size=33639 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_uAWJc.txt size=1145 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_1q709.txt size=45099 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_2rUo5.txt size=17784 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_21 addr=http://192.168.1.215:9000 files=5
+2025/11/30 16:35:50 [register] file=file_5Hmqe.txt size=16617 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_xKAWj.txt size=36433 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_hS3L8.txt size=36809 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_OWTyb.txt size=49317 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_noGks.txt size=16463 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_16 addr=http://192.168.1.124:9000 files=5
+2025/11/30 16:35:50 [register] file=file_TMlRA.txt size=49195 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_h5oUp.txt size=16719 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_aONnF.txt size=16989 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_qxbC8.txt size=29573 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_XtxnJ.txt size=46003 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_17 addr=http://192.168.1.105:9000 files=5
+2025/11/30 16:35:50 [register] file=file_I9L0p.txt size=46291 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_QW8gs.txt size=28777 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_rFNhx.txt size=11164 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_U7O0F.txt size=7298 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_drHAp.txt size=26792 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [register] peer=load_peer_50_22 addr=http://192.168.1.61:9000 files=5
+2025/11/30 16:35:50 [register] file=file_cTkb3.txt size=13328 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_LPSq1.txt size=37428 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_Jln12.txt size=47281 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_t25B6.txt size=23528 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_SZmmU.txt size=28194 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_20 addr=http://192.168.1.84:9000 files=5
+2025/11/30 16:35:50 [register] file=file_lMoBx.txt size=46992 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_fAScP.txt size=27508 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_U5oYx.txt size=7709 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_HjWjC.txt size=16599 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_lKCS5.txt size=17721 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_25 addr=http://192.168.1.62:9000 files=5
+2025/11/30 16:35:50 [register] file=file_JD0F8.txt size=32906 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_Mcjq0.txt size=47027 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_fwUbO.txt size=37661 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_eDPjF.txt size=6805 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_rmq1s.txt size=10106 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_24 addr=http://192.168.1.111:9000 files=5
+2025/11/30 16:35:50 [register] file=file_sv5Dj.txt size=31273 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_HTxOB.txt size=1121 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_FcrvQ.txt size=47285 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_eX8Q3.txt size=40873 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_XrF3u.txt size=15213 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_23 addr=http://192.168.1.123:9000 files=5
+2025/11/30 16:35:50 [register] file=file_nQsMH.txt size=9388 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_CCHzD.txt size=30358 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_xBLF1.txt size=22563 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_dUAOr.txt size=40976 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [register] file=file_zRZdt.txt size=29304 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_26 addr=http://192.168.1.5:9000 files=5
+2025/11/30 16:35:50 [register] file=file_QPTR9.txt size=17934 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_BM7Xh.txt size=35122 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_ZbJ4F.txt size=23615 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_UN5uV.txt size=16540 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_LWEQS.txt size=32990 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_27 addr=http://192.168.1.88:9000 files=5
+2025/11/30 16:35:50 [register] file=file_yqnTj.txt size=9409 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_jKgqy.txt size=15656 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_KVeTB.txt size=1853 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_3XSkj.txt size=32095 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_5AvEU.txt size=16933 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_28 addr=http://192.168.1.94:9000 files=5
+2025/11/30 16:35:50 [register] file=file_4xFNB.txt size=25887 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_1tGi8.txt size=15726 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_UOCKC.txt size=21566 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_074ur.txt size=35579 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_2znf7.txt size=24087 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [register] peer=load_peer_50_32 addr=http://192.168.1.119:9000 files=5
+2025/11/30 16:35:50 [register] file=file_jqwCq.txt size=15376 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_VWOWR.txt size=15121 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_2A9RX.txt size=30595 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_8C4zf.txt size=16167 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_le447.txt size=23828 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_30 addr=http://192.168.1.116:9000 files=5
+2025/11/30 16:35:50 [register] file=file_ShBrk.txt size=30356 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_7KlYX.txt size=34288 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_UUzwU.txt size=1479 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_GnlJH.txt size=12047 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_j6cR1.txt size=2995 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_31 addr=http://192.168.1.221:9000 files=5
+2025/11/30 16:35:50 [register] file=file_K34Ak.txt size=20083 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_ykYFu.txt size=46066 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_8Aw1O.txt size=20297 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_nrg4I.txt size=21165 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_8WE2C.txt size=20315 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_29 addr=http://192.168.1.89:9000 files=5
+2025/11/30 16:35:50 [register] file=file_2S2Kj.txt size=37774 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_Mx1Zz.txt size=8310 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_oVMd0.txt size=17273 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_0mlvI.txt size=17214 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_qkflh.txt size=28223 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_33 addr=http://192.168.1.239:9000 files=5
+2025/11/30 16:35:50 [register] file=file_4k3MS.txt size=38961 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_VUojE.txt size=29385 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_g3XLe.txt size=21243 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_iX1Rt.txt size=22914 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_oIPzy.txt size=30539 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_34 addr=http://192.168.1.51:9000 files=5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [register] file=file_XGXIl.txt size=32587 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_FPDk9.txt size=42393 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_a1PUm.txt size=16147 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_otMCs.txt size=27120 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_lXM6F.txt size=39234 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_35 addr=http://192.168.1.10:9000 files=5
+2025/11/30 16:35:50 [register] file=file_aV937.txt size=37907 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_ExUL7.txt size=6817 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_eiTGh.txt size=23742 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_T57XH.txt size=35584 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_Lv1lj.txt size=30648 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [register] peer=load_peer_50_37 addr=http://192.168.1.173:9000 files=5
+2025/11/30 16:35:50 [register] file=file_9lQRY.txt size=17157 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_l3zvQ.txt size=36270 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_f38Qz.txt size=16471 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_aNnRR.txt size=3993 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_rWTIP.txt size=43706 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_36 addr=http://192.168.1.97:9000 files=5
+2025/11/30 16:35:50 [register] file=file_JXD6C.txt size=10540 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_QqNdK.txt size=12375 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_qIgNq.txt size=28709 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_PU7d5.txt size=11609 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_FvnyA.txt size=43023 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_38 addr=http://192.168.1.142:9000 files=5
+2025/11/30 16:35:50 [register] file=file_oHG4k.txt size=25513 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_WxA8X.txt size=8403 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_MqnEx.txt size=28019 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_s0EbW.txt size=49888 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_vyao2.txt size=19501 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_39 addr=http://192.168.1.74:9000 files=5
+2025/11/30 16:35:50 [register] file=file_DdXgu.txt size=46715 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_3rxVT.txt size=41995 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_Tb17L.txt size=23821 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_uDPJV.txt size=22743 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_feXbo.txt size=48139 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_40 addr=http://192.168.1.206:9000 files=5
+2025/11/30 16:35:50 [register] file=file_QU54M.txt size=38933 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_831Ke.txt size=40608 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_9CKaW.txt size=22638 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_zYFU6.txt size=19339 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_S4scM.txt size=5812 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_41 addr=http://192.168.1.159:9000 files=5
+2025/11/30 16:35:50 [register] file=file_L580B.txt size=32280 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_G82Cm.txt size=32093 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_AAP0L.txt size=38069 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_B4ef6.txt size=2700 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_nap7L.txt size=38857 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_42 addr=http://192.168.1.174:9000 files=5
+2025/11/30 16:35:50 [register] file=file_EZRLv.txt size=45195 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_qIZrb.txt size=38680 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_9ZjnZ.txt size=5553 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_4eRt6.txt size=21160 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_uSQEO.txt size=41124 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_43 addr=http://192.168.1.78:9000 files=5
+2025/11/30 16:35:50 [register] file=file_j8tAi.txt size=14391 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_sJDWG.txt size=46969 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_8CoPJ.txt size=11662 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_0WfKl.txt size=25074 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_zpZty.txt size=45596 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_44 addr=http://192.168.1.252:9000 files=5
+2025/11/30 16:35:50 [register] file=file_E31uG.txt size=13685 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_cgBLP.txt size=12934 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_1hqhc.txt size=17117 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_0N8d5.txt size=41082 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_VhHF6.txt size=37410 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_45 addr=http://192.168.1.240:9000 files=5
+2025/11/30 16:35:50 [register] file=file_8Unab.txt size=28384 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_dQf9S.txt size=8117 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_MroDF.txt size=23425 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_YIQcZ.txt size=28916 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_RCey8.txt size=40305 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_46 addr=http://192.168.1.143:9000 files=5
+2025/11/30 16:35:50 [register] file=file_6OB8c.txt size=9958 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_pIuRT.txt size=15872 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_a3Thp.txt size=36522 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_BH7qO.txt size=31985 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_cZpQS.txt size=5560 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_47 addr=http://192.168.1.90:9000 files=5
+2025/11/30 16:35:50 [register] file=file_PTHJG.txt size=46258 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_HNGV9.txt size=5527 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_sQW2n.txt size=28961 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_MQYH4.txt size=42536 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_FtlTE.txt size=3532 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_48 addr=http://192.168.1.69:9000 files=5
+2025/11/30 16:35:50 [register] file=file_glfpz.txt size=32228 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_pmjhV.txt size=21644 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_LJ1nW.txt size=37657 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_0SNev.txt size=32691 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_lOzxK.txt size=35470 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_49 addr=http://192.168.1.17:9000 files=5
+2025/11/30 16:35:50 [register] file=file_1cFuU.txt size=41539 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_UJsYs.txt size=16786 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_y9v78.txt size=30658 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_xapMw.txt size=3781 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_vXHRc.txt size=49391 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_0 addr=http://192.168.1.50:9000 files=5
+2025/11/30 16:35:50 [register] file=file_hfwWt.txt size=11964 version=1 host=load_peer_10_0
+2025/11/30 16:35:50 [register] file=file_uiXVf.txt size=21570 version=1 host=load_peer_10_0
+2025/11/30 16:35:50 [register] file=file_RjuVM.txt size=30854 version=1 host=load_peer_10_0
+2025/11/30 16:35:50 [register] file=file_26mqE.txt size=11220 version=1 host=load_peer_10_0
+2025/11/30 16:35:50 [register] file=file_1ZUAz.txt size=27776 version=1 host=load_peer_10_0
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_2 addr=http://192.168.1.126:9000 files=5
+2025/11/30 16:35:50 [register] file=file_BHWqq.txt size=19645 version=1 host=load_peer_10_2
+2025/11/30 16:35:50 [register] file=file_j80uP.txt size=2360 version=1 host=load_peer_10_2
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54106
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [register] file=file_5lNWG.txt size=8850 version=1 host=load_peer_10_2
+2025/11/30 16:35:50 [register] file=file_nsFxK.txt size=31286 version=1 host=load_peer_10_2
+2025/11/30 16:35:50 [register] file=file_Q1bf9.txt size=19388 version=1 host=load_peer_10_2
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_1 addr=http://192.168.1.126:9000 files=5
+2025/11/30 16:35:50 [register] file=file_2dAbx.txt size=8467 version=1 host=load_peer_10_1
+2025/11/30 16:35:50 [register] file=file_ToULJ.txt size=11487 version=1 host=load_peer_10_1
+2025/11/30 16:35:50 [register] file=file_O3T6c.txt size=48392 version=1 host=load_peer_10_1
+2025/11/30 16:35:50 [register] file=file_kzihs.txt size=16028 version=1 host=load_peer_10_1
+2025/11/30 16:35:50 [register] file=file_KQBX0.txt size=8211 version=1 host=load_peer_10_1
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54100
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_3 addr=http://192.168.1.123:9000 files=5
+2025/11/30 16:35:50 [register] file=file_XZrXb.txt size=14249 version=1 host=load_peer_10_3
+2025/11/30 16:35:50 [register] file=file_xwZxB.txt size=2498 version=1 host=load_peer_10_3
+2025/11/30 16:35:50 [register] file=file_zmbvH.txt size=33863 version=1 host=load_peer_10_3
+2025/11/30 16:35:50 [register] file=file_8aceI.txt size=34912 version=1 host=load_peer_10_3
+2025/11/30 16:35:50 [register] file=file_G4oQh.txt size=30729 version=1 host=load_peer_10_3
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_4 addr=http://192.168.1.245:9000 files=5
+2025/11/30 16:35:50 [register] file=file_4V0aF.txt size=29297 version=1 host=load_peer_10_4
+2025/11/30 16:35:50 [register] file=file_kEDF2.txt size=37966 version=1 host=load_peer_10_4
+2025/11/30 16:35:50 [register] file=file_M7PuV.txt size=9483 version=1 host=load_peer_10_4
+2025/11/30 16:35:50 [register] file=file_dRvoM.txt size=45253 version=1 host=load_peer_10_4
+2025/11/30 16:35:50 [register] file=file_mOsQm.txt size=5031 version=1 host=load_peer_10_4
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_8 addr=http://192.168.1.253:9000 files=5
+2025/11/30 16:35:50 [register] file=file_yiKfl.txt size=35596 version=1 host=load_peer_10_8
+2025/11/30 16:35:50 [register] file=file_nkCgu.txt size=23053 version=1 host=load_peer_10_8
+2025/11/30 16:35:50 [register] file=file_U9yTP.txt size=45766 version=1 host=load_peer_10_8
+2025/11/30 16:35:50 [register] file=file_x4fgL.txt size=46436 version=1 host=load_peer_10_8
+2025/11/30 16:35:50 [register] file=file_UkyMZ.txt size=30293 version=1 host=load_peer_10_8
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_7 addr=http://192.168.1.59:9000 files=5
+2025/11/30 16:35:50 [register] file=file_wFrGI.txt size=3971 version=1 host=load_peer_10_7
+2025/11/30 16:35:50 [register] file=file_tTFlK.txt size=32118 version=1 host=load_peer_10_7
+2025/11/30 16:35:50 [register] file=file_LZZ8i.txt size=23303 version=1 host=load_peer_10_7
+2025/11/30 16:35:50 [register] file=file_bsuLU.txt size=4002 version=1 host=load_peer_10_7
+2025/11/30 16:35:50 [register] file=file_UwNxR.txt size=38610 version=1 host=load_peer_10_7
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_5 addr=http://192.168.1.132:9000 files=5
+2025/11/30 16:35:50 [register] file=file_C8C1F.txt size=7073 version=1 host=load_peer_10_5
+2025/11/30 16:35:50 [register] file=file_Sz64u.txt size=25161 version=1 host=load_peer_10_5
+2025/11/30 16:35:50 [register] file=file_41k2n.txt size=15554 version=1 host=load_peer_10_5
+2025/11/30 16:35:50 [register] file=file_m6P1E.txt size=18333 version=1 host=load_peer_10_5
+2025/11/30 16:35:50 [register] file=file_qUjoH.txt size=44846 version=1 host=load_peer_10_5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_9 addr=http://192.168.1.11:9000 files=5
+2025/11/30 16:35:50 [register] file=file_HWKy1.txt size=7108 version=1 host=load_peer_10_9
+2025/11/30 16:35:50 [register] file=file_KQDpm.txt size=7061 version=1 host=load_peer_10_9
+2025/11/30 16:35:50 [register] file=file_3EFB5.txt size=23569 version=1 host=load_peer_10_9
+2025/11/30 16:35:50 [register] file=file_Cms1f.txt size=46528 version=1 host=load_peer_10_9
+2025/11/30 16:35:50 [register] file=file_k8wr0.txt size=1308 version=1 host=load_peer_10_9
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54136
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_10_6 addr=http://192.168.1.96:9000 files=5
+2025/11/30 16:35:50 [register] file=file_8fGHS.txt size=35432 version=1 host=load_peer_10_6
+2025/11/30 16:35:50 [register] file=file_9g5Km.txt size=42489 version=1 host=load_peer_10_6
+2025/11/30 16:35:50 [register] file=file_13wPr.txt size=29610 version=1 host=load_peer_10_6
+2025/11/30 16:35:50 [register] file=file_FhJBq.txt size=28818 version=1 host=load_peer_10_6
+2025/11/30 16:35:50 [register] file=file_Zugsr.txt size=9136 version=1 host=load_peer_10_6
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_0 addr=http://192.168.1.255:9000 files=5
+2025/11/30 16:35:50 [register] file=file_cLkBh.txt size=18549 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_nrN3y.txt size=39656 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_Oox7D.txt size=42531 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_djYQe.txt size=45202 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [register] file=file_w4xgO.txt size=10270 version=1 host=load_peer_50_0
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_3 addr=http://192.168.1.241:9000 files=5
+2025/11/30 16:35:50 [register] file=file_oINXx.txt size=48111 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_By95N.txt size=21316 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_dRx75.txt size=38298 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_sccgp.txt size=35351 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [register] file=file_vRJpg.txt size=33186 version=1 host=load_peer_50_3
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_2 addr=http://192.168.1.2:9000 files=5
+2025/11/30 16:35:50 [register] file=file_9ML4D.txt size=13794 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_jSHAo.txt size=6804 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_tAKUW.txt size=36248 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_8Qai1.txt size=47475 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [register] file=file_TWhb4.txt size=36425 version=1 host=load_peer_50_2
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_1 addr=http://192.168.1.138:9000 files=5
+2025/11/30 16:35:50 [register] file=file_4C7Nv.txt size=30331 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_lLnGp.txt size=32278 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_GQjHv.txt size=46615 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_vlQAT.txt size=28748 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [register] file=file_lb6Vq.txt size=4149 version=1 host=load_peer_50_1
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_4 addr=http://192.168.1.231:9000 files=5
+2025/11/30 16:35:50 [register] file=file_H8fxa.txt size=33415 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_ekXx9.txt size=47303 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_abfLl.txt size=9944 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_JPfEp.txt size=31602 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [register] file=file_pb3Kw.txt size=37514 version=1 host=load_peer_50_4
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_5 addr=http://192.168.1.217:9000 files=5
+2025/11/30 16:35:50 [register] file=file_6v3k6.txt size=43514 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_I4P1R.txt size=43380 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_lhmqA.txt size=23810 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_QAxLV.txt size=5561 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [register] file=file_sMvoZ.txt size=1459 version=1 host=load_peer_50_5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_8 addr=http://192.168.1.157:9000 files=5
+2025/11/30 16:35:50 [register] file=file_NW4Gz.txt size=46753 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_khJOK.txt size=34532 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_hB3LT.txt size=6096 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_aBCJ2.txt size=37032 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [register] file=file_nb5zo.txt size=4847 version=1 host=load_peer_50_8
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_7 addr=http://192.168.1.176:9000 files=5
+2025/11/30 16:35:50 [register] file=file_lnant.txt size=39281 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_zcASU.txt size=46370 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_oLr5b.txt size=48411 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_qDxL6.txt size=44109 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [register] file=file_zRN2a.txt size=3592 version=1 host=load_peer_50_7
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [register] peer=load_peer_50_6 addr=http://192.168.1.83:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Jdot1.txt size=25083 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_C37xj.txt size=41940 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_KzIIy.txt size=43234 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_VFBGV.txt size=49274 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [register] file=file_tFwWy.txt size=22523 version=1 host=load_peer_50_6
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_9 addr=http://192.168.1.107:9000 files=5
+2025/11/30 16:35:50 [register] file=file_50cfp.txt size=14949 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_2USxW.txt size=42781 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_xfAic.txt size=7351 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_PABKE.txt size=5996 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [register] file=file_w5bwX.txt size=40037 version=1 host=load_peer_50_9
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_10 addr=http://192.168.1.119:9000 files=5
+2025/11/30 16:35:50 [register] file=file_W36PV.txt size=42159 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_4EUBd.txt size=4071 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_kn1Ef.txt size=34987 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_TJ6ra.txt size=31279 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [register] file=file_QtQQW.txt size=26135 version=1 host=load_peer_50_10
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [register] peer=load_peer_50_11 addr=http://192.168.1.34:9000 files=5
+2025/11/30 16:35:50 [register] file=file_6A9oG.txt size=10398 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_PHNGg.txt size=37146 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_IhUPL.txt size=33238 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_fynBf.txt size=43214 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [register] file=file_jInfT.txt size=49331 version=1 host=load_peer_50_11
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_12 addr=http://192.168.1.100:9000 files=5
+2025/11/30 16:35:50 [register] file=file_K7Qlv.txt size=20955 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_HR8JZ.txt size=37656 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_hLydd.txt size=34777 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_KyB9z.txt size=45891 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [register] file=file_fMioc.txt size=47179 version=1 host=load_peer_50_12
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_13 addr=http://192.168.1.73:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Qo19B.txt size=46566 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_e13Ka.txt size=26956 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_sudbp.txt size=47737 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_5lS2a.txt size=48084 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [register] file=file_fjXgU.txt size=9995 version=1 host=load_peer_50_13
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_14 addr=http://192.168.1.127:9000 files=5
+2025/11/30 16:35:50 [register] file=file_sJ2JZ.txt size=19825 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_5H2H3.txt size=45505 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_EkA0z.txt size=10895 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_b2xej.txt size=12372 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [register] file=file_SOTYQ.txt size=23610 version=1 host=load_peer_50_14
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_15 addr=http://192.168.1.41:9000 files=5
+2025/11/30 16:35:50 [register] file=file_P5FQq.txt size=12119 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_q0Dvd.txt size=49013 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_wc010.txt size=36135 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_mYAZ3.txt size=5098 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [register] file=file_trhIu.txt size=31934 version=1 host=load_peer_50_15
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_16 addr=http://192.168.1.169:9000 files=5
+2025/11/30 16:35:50 [register] file=file_XvG37.txt size=35100 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_86S39.txt size=11496 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_MB81Y.txt size=32238 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_e29cG.txt size=6152 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [register] file=file_47s91.txt size=16692 version=1 host=load_peer_50_16
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_17 addr=http://192.168.1.114:9000 files=5
+2025/11/30 16:35:50 [register] file=file_UY0b6.txt size=43552 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_KJi9N.txt size=38794 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_m5BqD.txt size=39173 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_cGdt6.txt size=27169 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [register] file=file_VpQxq.txt size=19694 version=1 host=load_peer_50_17
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_18 addr=http://192.168.1.230:9000 files=5
+2025/11/30 16:35:50 [register] file=file_F5dBT.txt size=40205 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_MfkNE.txt size=29354 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_YrSsM.txt size=5492 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_0c6qb.txt size=47868 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [register] file=file_71hwG.txt size=9567 version=1 host=load_peer_50_18
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_19 addr=http://192.168.1.118:9000 files=5
+2025/11/30 16:35:50 [register] file=file_tKbqY.txt size=21058 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_CZyvJ.txt size=12997 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_21onD.txt size=40354 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_Itzvt.txt size=20649 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [register] file=file_PlgZf.txt size=35234 version=1 host=load_peer_50_19
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_20 addr=http://192.168.1.159:9000 files=5
+2025/11/30 16:35:50 [register] file=file_bO290.txt size=18460 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_GurNc.txt size=3893 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_hmgWA.txt size=15998 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_7Ps01.txt size=14173 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [register] file=file_pB3fW.txt size=48337 version=1 host=load_peer_50_20
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_21 addr=http://192.168.1.244:9000 files=5
+2025/11/30 16:35:50 [register] file=file_CvHfK.txt size=11119 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_kqAuY.txt size=21113 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_A4Pu0.txt size=7719 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_whUBa.txt size=39082 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [register] file=file_5NkX1.txt size=49964 version=1 host=load_peer_50_21
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_22 addr=http://192.168.1.165:9000 files=5
+2025/11/30 16:35:50 [register] file=file_P7MoK.txt size=11665 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_OlRzE.txt size=22081 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_fKYaw.txt size=5338 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_M4jpS.txt size=38915 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [register] file=file_QSjR5.txt size=26316 version=1 host=load_peer_50_22
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_23 addr=http://192.168.1.205:9000 files=5
+2025/11/30 16:35:50 [register] file=file_HyZ2Z.txt size=27114 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_J2GZE.txt size=21151 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_VXvyP.txt size=41372 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_1DXkK.txt size=5327 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [register] file=file_GJH4G.txt size=31391 version=1 host=load_peer_50_23
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_24 addr=http://192.168.1.70:9000 files=5
+2025/11/30 16:35:50 [register] file=file_f1jvN.txt size=41842 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_saq8T.txt size=47712 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_fsAzB.txt size=42530 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_mSp5e.txt size=41035 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [register] file=file_mQFZf.txt size=31765 version=1 host=load_peer_50_24
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_25 addr=http://192.168.1.186:9000 files=5
+2025/11/30 16:35:50 [register] file=file_lYXjl.txt size=32267 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_YOQ95.txt size=23867 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_5T9iy.txt size=21952 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_AL99M.txt size=5658 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [register] file=file_NGy1f.txt size=40147 version=1 host=load_peer_50_25
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_26 addr=http://192.168.1.157:9000 files=5
+2025/11/30 16:35:50 [register] file=file_etkrZ.txt size=5450 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_k4J1V.txt size=39338 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_ksgaZ.txt size=43676 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_YjD1I.txt size=12672 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [register] file=file_k6KZe.txt size=21834 version=1 host=load_peer_50_26
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_27 addr=http://192.168.1.110:9000 files=5
+2025/11/30 16:35:50 [register] file=file_u2y6L.txt size=14727 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_2cH5V.txt size=25223 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_cUXFV.txt size=13440 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_y3aDR.txt size=41979 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [register] file=file_51N60.txt size=1955 version=1 host=load_peer_50_27
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_28 addr=http://192.168.1.249:9000 files=5
+2025/11/30 16:35:50 [register] file=file_8uUkV.txt size=5547 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_Q8e1o.txt size=23938 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_MHV1N.txt size=27715 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_yCpWR.txt size=39467 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [register] file=file_a8rsT.txt size=41442 version=1 host=load_peer_50_28
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_29 addr=http://192.168.1.100:9000 files=5
+2025/11/30 16:35:50 [register] file=file_YZtLQ.txt size=4163 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_0wXOf.txt size=33971 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_kgToM.txt size=18153 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_w43tJ.txt size=43705 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [register] file=file_5caNV.txt size=12976 version=1 host=load_peer_50_29
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_30 addr=http://192.168.1.29:9000 files=5
+2025/11/30 16:35:50 [register] file=file_jlkP1.txt size=27135 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_U3yu1.txt size=13889 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_QfTnQ.txt size=33662 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_aWBZ3.txt size=43209 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [register] file=file_FBo8B.txt size=38223 version=1 host=load_peer_50_30
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_31 addr=http://192.168.1.61:9000 files=5
+2025/11/30 16:35:50 [register] file=file_IDrlq.txt size=12029 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_pEjyn.txt size=39826 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_ljL6J.txt size=8237 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_siVmf.txt size=48965 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [register] file=file_0fZJ1.txt size=42290 version=1 host=load_peer_50_31
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_32 addr=http://192.168.1.75:9000 files=5
+2025/11/30 16:35:50 [register] file=file_fY1Jw.txt size=2788 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_XRoSo.txt size=22814 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_0MC45.txt size=10567 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_NPo7N.txt size=16358 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [register] file=file_Bq1Xu.txt size=43129 version=1 host=load_peer_50_32
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_33 addr=http://192.168.1.138:9000 files=5
+2025/11/30 16:35:50 [register] file=file_zOZiE.txt size=4084 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_R53p6.txt size=37049 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_0EIpa.txt size=2839 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_f55lH.txt size=9984 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [register] file=file_v23PF.txt size=13328 version=1 host=load_peer_50_33
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_34 addr=http://192.168.1.214:9000 files=5
+2025/11/30 16:35:50 [register] file=file_cl4c6.txt size=11585 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_FEcfT.txt size=41404 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_SKmbJ.txt size=9700 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_VdtYT.txt size=25572 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [register] file=file_rWbbA.txt size=34718 version=1 host=load_peer_50_34
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_35 addr=http://192.168.1.143:9000 files=5
+2025/11/30 16:35:50 [register] file=file_6Oxen.txt size=12006 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_1FJe8.txt size=46750 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_MEJIQ.txt size=27262 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_SNyL9.txt size=23105 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [register] file=file_R0a5W.txt size=5568 version=1 host=load_peer_50_35
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_36 addr=http://192.168.1.2:9000 files=5
+2025/11/30 16:35:50 [register] file=file_yifSP.txt size=3410 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_oGxs9.txt size=3476 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_6g2O3.txt size=6291 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_OWQiv.txt size=1672 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [register] file=file_P0AQ6.txt size=29733 version=1 host=load_peer_50_36
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_37 addr=http://192.168.1.251:9000 files=5
+2025/11/30 16:35:50 [register] file=file_FgBl6.txt size=18650 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_hn4XY.txt size=32627 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_4Ykld.txt size=46235 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_0dx05.txt size=5954 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [register] file=file_WjsVF.txt size=24838 version=1 host=load_peer_50_37
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_38 addr=http://192.168.1.10:9000 files=5
+2025/11/30 16:35:50 [register] file=file_ZYRJn.txt size=27981 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_E4W8r.txt size=8198 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_fS4Gu.txt size=23819 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_4SVdB.txt size=44821 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [register] file=file_UyXMJ.txt size=22872 version=1 host=load_peer_50_38
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_39 addr=http://192.168.1.230:9000 files=5
+2025/11/30 16:35:50 [register] file=file_juPNB.txt size=47239 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_XloER.txt size=43146 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_sBWvb.txt size=32423 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_ektJ0.txt size=39495 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [register] file=file_4puUF.txt size=38326 version=1 host=load_peer_50_39
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_40 addr=http://192.168.1.182:9000 files=5
+2025/11/30 16:35:50 [register] file=file_vgGyc.txt size=33041 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_1LZ1S.txt size=40638 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_d1f6o.txt size=36857 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_ZINEH.txt size=37507 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [register] file=file_5IvUn.txt size=47397 version=1 host=load_peer_50_40
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_41 addr=http://192.168.1.179:9000 files=5
+2025/11/30 16:35:50 [register] file=file_0ekdK.txt size=35285 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_DH13G.txt size=9641 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_tYM7x.txt size=41693 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_ZFWuZ.txt size=6659 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [register] file=file_nxN4f.txt size=23945 version=1 host=load_peer_50_41
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_42 addr=http://192.168.1.231:9000 files=5
+2025/11/30 16:35:50 [register] file=file_AkIjM.txt size=16778 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_41IEz.txt size=45331 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_GPcRh.txt size=47404 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_uKKCq.txt size=26445 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [register] file=file_EnTVl.txt size=9656 version=1 host=load_peer_50_42
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_43 addr=http://192.168.1.251:9000 files=5
+2025/11/30 16:35:50 [register] file=file_SLt1A.txt size=30003 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_TzbeH.txt size=14399 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_ePk2f.txt size=45939 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_YFlUa.txt size=7320 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [register] file=file_ZE7X1.txt size=47666 version=1 host=load_peer_50_43
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_44 addr=http://192.168.1.212:9000 files=5
+2025/11/30 16:35:50 [register] file=file_wSmhG.txt size=8574 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_sNB63.txt size=35452 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_DJaWv.txt size=4800 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_mxch6.txt size=5571 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [register] file=file_kOCSX.txt size=28761 version=1 host=load_peer_50_44
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_45 addr=http://192.168.1.15:9000 files=5
+2025/11/30 16:35:50 [register] file=file_zFWp4.txt size=41502 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_CjtDE.txt size=19996 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_SZ9ET.txt size=37720 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_CuZHp.txt size=10271 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [register] file=file_CeOew.txt size=18237 version=1 host=load_peer_50_45
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_46 addr=http://192.168.1.238:9000 files=5
+2025/11/30 16:35:50 [register] file=file_jTUNU.txt size=25579 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_K8IO6.txt size=25488 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_hIznH.txt size=26513 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_wegss.txt size=43097 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [register] file=file_rWDsE.txt size=20049 version=1 host=load_peer_50_46
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_47 addr=http://192.168.1.39:9000 files=5
+2025/11/30 16:35:50 [register] file=file_mSFeC.txt size=23009 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_YSwwp.txt size=16870 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_HnDaZ.txt size=14465 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_H8kMH.txt size=10452 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [register] file=file_DVO4u.txt size=11047 version=1 host=load_peer_50_47
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_48 addr=http://192.168.1.57:9000 files=5
+2025/11/30 16:35:50 [register] file=file_CPcMn.txt size=4253 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_ueuTV.txt size=31696 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_g6oMX.txt size=23522 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_7J1gN.txt size=33849 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [register] file=file_ymrzo.txt size=34675 version=1 host=load_peer_50_48
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_50_49 addr=http://192.168.1.62:9000 files=5
+2025/11/30 16:35:50 [register] file=file_K71ih.txt size=18976 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_CDKOE.txt size=32612 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_VBFSw.txt size=38531 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_zk2pH.txt size=28630 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [register] file=file_CqJQJ.txt size=25212 version=1 host=load_peer_50_49
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_0 addr=http://192.168.1.142:9000 files=5
+2025/11/30 16:35:50 [register] file=file_j9qKi.txt size=39479 version=1 host=load_peer_100_0
+2025/11/30 16:35:50 [register] file=file_y47ik.txt size=24759 version=1 host=load_peer_100_0
+2025/11/30 16:35:50 [register] file=file_tKXBJ.txt size=31601 version=1 host=load_peer_100_0
+2025/11/30 16:35:50 [register] file=file_EjCMD.txt size=22015 version=1 host=load_peer_100_0
+2025/11/30 16:35:50 [register] file=file_6Kt6c.txt size=38313 version=1 host=load_peer_100_0
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_1 addr=http://192.168.1.12:9000 files=5
+2025/11/30 16:35:50 [register] file=file_l0dcx.txt size=45601 version=1 host=load_peer_100_1
+2025/11/30 16:35:50 [register] file=file_hgx2i.txt size=5673 version=1 host=load_peer_100_1
+2025/11/30 16:35:50 [register] file=file_7Pstx.txt size=37214 version=1 host=load_peer_100_1
+2025/11/30 16:35:50 [register] file=file_rNjsF.txt size=7425 version=1 host=load_peer_100_1
+2025/11/30 16:35:50 [register] file=file_u2FKd.txt size=36775 version=1 host=load_peer_100_1
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_2 addr=http://192.168.1.153:9000 files=5
+2025/11/30 16:35:50 [register] file=file_4oEO0.txt size=3140 version=1 host=load_peer_100_2
+2025/11/30 16:35:50 [register] file=file_RxjRo.txt size=17848 version=1 host=load_peer_100_2
+2025/11/30 16:35:50 [register] file=file_J2A2N.txt size=6999 version=1 host=load_peer_100_2
+2025/11/30 16:35:50 [register] file=file_AmLCb.txt size=4434 version=1 host=load_peer_100_2
+2025/11/30 16:35:50 [register] file=file_3y8x6.txt size=30733 version=1 host=load_peer_100_2
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_3 addr=http://192.168.1.21:9000 files=5
+2025/11/30 16:35:50 [register] file=file_BhCEm.txt size=37299 version=1 host=load_peer_100_3
+2025/11/30 16:35:50 [register] file=file_Wg2Sw.txt size=26779 version=1 host=load_peer_100_3
+2025/11/30 16:35:50 [register] file=file_aQBkr.txt size=32821 version=1 host=load_peer_100_3
+2025/11/30 16:35:50 [register] file=file_xadak.txt size=36182 version=1 host=load_peer_100_3
+2025/11/30 16:35:50 [register] file=file_mDUue.txt size=30789 version=1 host=load_peer_100_3
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_5 addr=http://192.168.1.211:9000 files=5
+2025/11/30 16:35:50 [register] file=file_qm4ik.txt size=10180 version=1 host=load_peer_100_5
+2025/11/30 16:35:50 [register] file=file_f9Yh0.txt size=27716 version=1 host=load_peer_100_5
+2025/11/30 16:35:50 [register] file=file_jelZK.txt size=36447 version=1 host=load_peer_100_5
+2025/11/30 16:35:50 [register] file=file_gxl9k.txt size=21824 version=1 host=load_peer_100_5
+2025/11/30 16:35:50 [register] file=file_1rO6e.txt size=11883 version=1 host=load_peer_100_5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54134
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_7 addr=http://192.168.1.121:9000 files=5
+2025/11/30 16:35:50 [register] file=file_CkfVS.txt size=22786 version=1 host=load_peer_100_7
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [register] file=file_SYvR4.txt size=45047 version=1 host=load_peer_100_7
+2025/11/30 16:35:50 [register] file=file_kD3M3.txt size=11319 version=1 host=load_peer_100_7
+2025/11/30 16:35:50 [register] file=file_kmVgy.txt size=11854 version=1 host=load_peer_100_7
+2025/11/30 16:35:50 [register] file=file_e6YQ2.txt size=22304 version=1 host=load_peer_100_7
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54148
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_6 addr=http://192.168.1.214:9000 files=5
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54144
+2025/11/30 16:35:50 [register] file=file_1RWCk.txt size=29644 version=1 host=load_peer_100_6
+2025/11/30 16:35:50 [register] file=file_gaIuh.txt size=14909 version=1 host=load_peer_100_6
+2025/11/30 16:35:50 [register] file=file_k3Qxz.txt size=42665 version=1 host=load_peer_100_6
+2025/11/30 16:35:50 [register] file=file_5LcKb.txt size=42371 version=1 host=load_peer_100_6
+2025/11/30 16:35:50 [register] file=file_jTeDb.txt size=43804 version=1 host=load_peer_100_6
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_8 addr=http://192.168.1.175:9000 files=5
+2025/11/30 16:35:50 [register] file=file_4WStY.txt size=6293 version=1 host=load_peer_100_8
+2025/11/30 16:35:50 [register] file=file_ozT7A.txt size=39954 version=1 host=load_peer_100_8
+2025/11/30 16:35:50 [register] file=file_otNgv.txt size=15873 version=1 host=load_peer_100_8
+2025/11/30 16:35:50 [register] file=file_q7jLS.txt size=48794 version=1 host=load_peer_100_8
+2025/11/30 16:35:50 [register] file=file_2vM6K.txt size=38430 version=1 host=load_peer_100_8
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_4 addr=http://192.168.1.25:9000 files=5
+2025/11/30 16:35:50 [register] file=file_MuEX0.txt size=44510 version=1 host=load_peer_100_4
+2025/11/30 16:35:50 [register] file=file_ftKOB.txt size=44671 version=1 host=load_peer_100_4
+2025/11/30 16:35:50 [register] file=file_i5IyD.txt size=27341 version=1 host=load_peer_100_4
+2025/11/30 16:35:50 [register] file=file_3UdK8.txt size=16024 version=1 host=load_peer_100_4
+2025/11/30 16:35:50 [register] file=file_NSWhY.txt size=5190 version=1 host=load_peer_100_4
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_9 addr=http://192.168.1.40:9000 files=5
+2025/11/30 16:35:50 [register] file=file_NltYI.txt size=11175 version=1 host=load_peer_100_9
+2025/11/30 16:35:50 [register] file=file_lscAs.txt size=22494 version=1 host=load_peer_100_9
+2025/11/30 16:35:50 [register] file=file_UollL.txt size=48526 version=1 host=load_peer_100_9
+2025/11/30 16:35:50 [register] file=file_PnBSX.txt size=35105 version=1 host=load_peer_100_9
+2025/11/30 16:35:50 [register] file=file_qZ1dB.txt size=24577 version=1 host=load_peer_100_9
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_10 addr=http://192.168.1.86:9000 files=5
+2025/11/30 16:35:50 [register] file=file_WVbmZ.txt size=19205 version=1 host=load_peer_100_10
+2025/11/30 16:35:50 [register] file=file_fJD9z.txt size=48891 version=1 host=load_peer_100_10
+2025/11/30 16:35:50 [register] file=file_PMTPU.txt size=22749 version=1 host=load_peer_100_10
+2025/11/30 16:35:50 [register] file=file_HIzAl.txt size=49136 version=1 host=load_peer_100_10
+2025/11/30 16:35:50 [register] file=file_eJYz6.txt size=13537 version=1 host=load_peer_100_10
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_11 addr=http://192.168.1.38:9000 files=5
+2025/11/30 16:35:50 [register] file=file_kcfA4.txt size=24473 version=1 host=load_peer_100_11
+2025/11/30 16:35:50 [register] file=file_vnOCT.txt size=24845 version=1 host=load_peer_100_11
+2025/11/30 16:35:50 [register] file=file_ox0h9.txt size=45350 version=1 host=load_peer_100_11
+2025/11/30 16:35:50 [register] file=file_lv6F6.txt size=43558 version=1 host=load_peer_100_11
+2025/11/30 16:35:50 [register] file=file_iIs3r.txt size=13890 version=1 host=load_peer_100_11
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_12 addr=http://192.168.1.50:9000 files=5
+2025/11/30 16:35:50 [register] file=file_CjEsK.txt size=23154 version=1 host=load_peer_100_12
+2025/11/30 16:35:50 [register] file=file_qo7BG.txt size=22583 version=1 host=load_peer_100_12
+2025/11/30 16:35:50 [register] file=file_U9C4D.txt size=4434 version=1 host=load_peer_100_12
+2025/11/30 16:35:50 [register] file=file_FncrB.txt size=11385 version=1 host=load_peer_100_12
+2025/11/30 16:35:50 [register] file=file_to6NE.txt size=32429 version=1 host=load_peer_100_12
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_13 addr=http://192.168.1.218:9000 files=5
+2025/11/30 16:35:50 [register] file=file_wxZ55.txt size=33731 version=1 host=load_peer_100_13
+2025/11/30 16:35:50 [register] file=file_OZYKg.txt size=9948 version=1 host=load_peer_100_13
+2025/11/30 16:35:50 [register] file=file_rP78P.txt size=26471 version=1 host=load_peer_100_13
+2025/11/30 16:35:50 [register] file=file_pfaXX.txt size=34218 version=1 host=load_peer_100_13
+2025/11/30 16:35:50 [register] file=file_GKBVL.txt size=11319 version=1 host=load_peer_100_13
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_14 addr=http://192.168.1.90:9000 files=5
+2025/11/30 16:35:50 [register] file=file_YmAcB.txt size=19895 version=1 host=load_peer_100_14
+2025/11/30 16:35:50 [register] file=file_gBsOO.txt size=10176 version=1 host=load_peer_100_14
+2025/11/30 16:35:50 [register] file=file_arjTs.txt size=6801 version=1 host=load_peer_100_14
+2025/11/30 16:35:50 [register] file=file_61qWg.txt size=13090 version=1 host=load_peer_100_14
+2025/11/30 16:35:50 [register] file=file_oKJRQ.txt size=49680 version=1 host=load_peer_100_14
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_15 addr=http://192.168.1.127:9000 files=5
+2025/11/30 16:35:50 [register] file=file_ch4bj.txt size=43023 version=1 host=load_peer_100_15
+2025/11/30 16:35:50 [register] file=file_2Vk9u.txt size=17837 version=1 host=load_peer_100_15
+2025/11/30 16:35:50 [register] file=file_CGgie.txt size=26914 version=1 host=load_peer_100_15
+2025/11/30 16:35:50 [register] file=file_WBRJf.txt size=41996 version=1 host=load_peer_100_15
+2025/11/30 16:35:50 [register] file=file_Z4lJZ.txt size=33457 version=1 host=load_peer_100_15
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_16 addr=http://192.168.1.143:9000 files=5
+2025/11/30 16:35:50 [register] file=file_CLPMZ.txt size=40965 version=1 host=load_peer_100_16
+2025/11/30 16:35:50 [register] file=file_GiKZ6.txt size=41678 version=1 host=load_peer_100_16
+2025/11/30 16:35:50 [register] file=file_vpPQn.txt size=11800 version=1 host=load_peer_100_16
+2025/11/30 16:35:50 [register] file=file_rtST4.txt size=48919 version=1 host=load_peer_100_16
+2025/11/30 16:35:50 [register] file=file_E2IS0.txt size=39258 version=1 host=load_peer_100_16
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_17 addr=http://192.168.1.92:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Y70vv.txt size=39462 version=1 host=load_peer_100_17
+2025/11/30 16:35:50 [register] file=file_4vGgt.txt size=41306 version=1 host=load_peer_100_17
+2025/11/30 16:35:50 [register] file=file_x2WEL.txt size=23113 version=1 host=load_peer_100_17
+2025/11/30 16:35:50 [register] file=file_juKyf.txt size=26201 version=1 host=load_peer_100_17
+2025/11/30 16:35:50 [register] file=file_FOVUr.txt size=4073 version=1 host=load_peer_100_17
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_18 addr=http://192.168.1.127:9000 files=5
+2025/11/30 16:35:50 [register] file=file_N5iIo.txt size=32934 version=1 host=load_peer_100_18
+2025/11/30 16:35:50 [register] file=file_zOAHW.txt size=3507 version=1 host=load_peer_100_18
+2025/11/30 16:35:50 [register] file=file_uEMy9.txt size=32260 version=1 host=load_peer_100_18
+2025/11/30 16:35:50 [register] file=file_BjxGE.txt size=16216 version=1 host=load_peer_100_18
+2025/11/30 16:35:50 [register] file=file_FptSm.txt size=44935 version=1 host=load_peer_100_18
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_19 addr=http://192.168.1.10:9000 files=5
+2025/11/30 16:35:50 [register] file=file_RVEdq.txt size=27654 version=1 host=load_peer_100_19
+2025/11/30 16:35:50 [register] file=file_D3Fvu.txt size=27198 version=1 host=load_peer_100_19
+2025/11/30 16:35:50 [register] file=file_N7nB2.txt size=19041 version=1 host=load_peer_100_19
+2025/11/30 16:35:50 [register] file=file_AsRa0.txt size=26635 version=1 host=load_peer_100_19
+2025/11/30 16:35:50 [register] file=file_g839a.txt size=34406 version=1 host=load_peer_100_19
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_20 addr=http://192.168.1.96:9000 files=5
+2025/11/30 16:35:50 [register] file=file_6f24T.txt size=29400 version=1 host=load_peer_100_20
+2025/11/30 16:35:50 [register] file=file_KROzT.txt size=11014 version=1 host=load_peer_100_20
+2025/11/30 16:35:50 [register] file=file_m6vkr.txt size=5045 version=1 host=load_peer_100_20
+2025/11/30 16:35:50 [register] file=file_t88Gw.txt size=15464 version=1 host=load_peer_100_20
+2025/11/30 16:35:50 [register] file=file_tqFog.txt size=18313 version=1 host=load_peer_100_20
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_21 addr=http://192.168.1.79:9000 files=5
+2025/11/30 16:35:50 [register] file=file_sQ98m.txt size=9943 version=1 host=load_peer_100_21
+2025/11/30 16:35:50 [register] file=file_oOWQk.txt size=6378 version=1 host=load_peer_100_21
+2025/11/30 16:35:50 [register] file=file_l0wBW.txt size=5552 version=1 host=load_peer_100_21
+2025/11/30 16:35:50 [register] file=file_7AAa7.txt size=22764 version=1 host=load_peer_100_21
+2025/11/30 16:35:50 [register] file=file_MERUW.txt size=4459 version=1 host=load_peer_100_21
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_22 addr=http://192.168.1.227:9000 files=5
+2025/11/30 16:35:50 [register] file=file_U9yrw.txt size=45333 version=1 host=load_peer_100_22
+2025/11/30 16:35:50 [register] file=file_O4rp2.txt size=2932 version=1 host=load_peer_100_22
+2025/11/30 16:35:50 [register] file=file_llLAV.txt size=12735 version=1 host=load_peer_100_22
+2025/11/30 16:35:50 [register] file=file_q0Tw2.txt size=13437 version=1 host=load_peer_100_22
+2025/11/30 16:35:50 [register] file=file_eD2WT.txt size=49640 version=1 host=load_peer_100_22
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_23 addr=http://192.168.1.4:9000 files=5
+2025/11/30 16:35:50 [register] file=file_N1Cdn.txt size=1854 version=1 host=load_peer_100_23
+2025/11/30 16:35:50 [register] file=file_klncF.txt size=25689 version=1 host=load_peer_100_23
+2025/11/30 16:35:50 [register] file=file_clzZK.txt size=32920 version=1 host=load_peer_100_23
+2025/11/30 16:35:50 [register] file=file_7DL7p.txt size=8221 version=1 host=load_peer_100_23
+2025/11/30 16:35:50 [register] file=file_52MVu.txt size=11910 version=1 host=load_peer_100_23
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_24 addr=http://192.168.1.84:9000 files=5
+2025/11/30 16:35:50 [register] file=file_rUUXW.txt size=1277 version=1 host=load_peer_100_24
+2025/11/30 16:35:50 [register] file=file_nCRtz.txt size=38181 version=1 host=load_peer_100_24
+2025/11/30 16:35:50 [register] file=file_XmsQY.txt size=7700 version=1 host=load_peer_100_24
+2025/11/30 16:35:50 [register] file=file_3OGbc.txt size=40701 version=1 host=load_peer_100_24
+2025/11/30 16:35:50 [register] file=file_DMmEb.txt size=37433 version=1 host=load_peer_100_24
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_25 addr=http://192.168.1.77:9000 files=5
+2025/11/30 16:35:50 [register] file=file_OEI4Q.txt size=3016 version=1 host=load_peer_100_25
+2025/11/30 16:35:50 [register] file=file_fxArQ.txt size=48876 version=1 host=load_peer_100_25
+2025/11/30 16:35:50 [register] file=file_OLPEg.txt size=14877 version=1 host=load_peer_100_25
+2025/11/30 16:35:50 [register] file=file_oLaGx.txt size=45388 version=1 host=load_peer_100_25
+2025/11/30 16:35:50 [register] file=file_oSh9y.txt size=4689 version=1 host=load_peer_100_25
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_26 addr=http://192.168.1.228:9000 files=5
+2025/11/30 16:35:50 [register] file=file_Vu583.txt size=14708 version=1 host=load_peer_100_26
+2025/11/30 16:35:50 [register] file=file_ATX6f.txt size=46712 version=1 host=load_peer_100_26
+2025/11/30 16:35:50 [register] file=file_FdGWg.txt size=39336 version=1 host=load_peer_100_26
+2025/11/30 16:35:50 [register] file=file_pXJHa.txt size=46628 version=1 host=load_peer_100_26
+2025/11/30 16:35:50 [register] file=file_LUYdt.txt size=44790 version=1 host=load_peer_100_26
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_27 addr=http://192.168.1.70:9000 files=5
+2025/11/30 16:35:50 [register] file=file_G1w9l.txt size=48639 version=1 host=load_peer_100_27
+2025/11/30 16:35:50 [register] file=file_tETHa.txt size=5362 version=1 host=load_peer_100_27
+2025/11/30 16:35:50 [register] file=file_SnnrT.txt size=28825 version=1 host=load_peer_100_27
+2025/11/30 16:35:50 [register] file=file_jdxpT.txt size=24768 version=1 host=load_peer_100_27
+2025/11/30 16:35:50 [register] file=file_HGpv0.txt size=22439 version=1 host=load_peer_100_27
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_28 addr=http://192.168.1.201:9000 files=5
+2025/11/30 16:35:50 [register] file=file_M549T.txt size=39132 version=1 host=load_peer_100_28
+2025/11/30 16:35:50 [register] file=file_BI1uW.txt size=33647 version=1 host=load_peer_100_28
+2025/11/30 16:35:50 [register] file=file_L5QB6.txt size=2726 version=1 host=load_peer_100_28
+2025/11/30 16:35:50 [register] file=file_Wg8xE.txt size=47410 version=1 host=load_peer_100_28
+2025/11/30 16:35:50 [register] file=file_Yrgn4.txt size=9688 version=1 host=load_peer_100_28
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_29 addr=http://192.168.1.253:9000 files=5
+2025/11/30 16:35:50 [register] file=file_D2iCl.txt size=25692 version=1 host=load_peer_100_29
+2025/11/30 16:35:50 [register] file=file_hdfV3.txt size=39989 version=1 host=load_peer_100_29
+2025/11/30 16:35:50 [register] file=file_ezWx5.txt size=25853 version=1 host=load_peer_100_29
+2025/11/30 16:35:50 [register] file=file_jiXpo.txt size=19165 version=1 host=load_peer_100_29
+2025/11/30 16:35:50 [register] file=file_dtfoR.txt size=40549 version=1 host=load_peer_100_29
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_30 addr=http://192.168.1.65:9000 files=5
+2025/11/30 16:35:50 [register] file=file_x8vFn.txt size=40885 version=1 host=load_peer_100_30
+2025/11/30 16:35:50 [register] file=file_DdyZz.txt size=33271 version=1 host=load_peer_100_30
+2025/11/30 16:35:50 [register] file=file_u317M.txt size=40006 version=1 host=load_peer_100_30
+2025/11/30 16:35:50 [register] file=file_IJym6.txt size=23082 version=1 host=load_peer_100_30
+2025/11/30 16:35:50 [register] file=file_Nco5E.txt size=15148 version=1 host=load_peer_100_30
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_31 addr=http://192.168.1.251:9000 files=5
+2025/11/30 16:35:50 [register] file=file_zpVMR.txt size=17203 version=1 host=load_peer_100_31
+2025/11/30 16:35:50 [register] file=file_JGZu8.txt size=15838 version=1 host=load_peer_100_31
+2025/11/30 16:35:50 [register] file=file_uvCmY.txt size=22634 version=1 host=load_peer_100_31
+2025/11/30 16:35:50 [register] file=file_XXVZs.txt size=17278 version=1 host=load_peer_100_31
+2025/11/30 16:35:50 [register] file=file_NVu66.txt size=17228 version=1 host=load_peer_100_31
+2025/11/30 16:35:50 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:50 [shadow] apply register
+2025/11/30 16:35:50 [register] peer=load_peer_100_32 addr=http://192.168.1.147:9000 files=5
+2025/11/30 16:35:50 [register] file=file_dxj67.txt size=3703 version=1 host=load_peer_100_32
+2025/11/30 16:35:50 [register] file=file_x0m3e.txt size=6085 version=1 host=load_peer_100_32
+2025/11/30 16:35:50 [register] file=file_zh4iL.txt size=5688 version=1 host=load_peer_100_32
+2025/11/30 16:35:50 [register] file=file_zVumi.txt size=32129 version=1 host=load_peer_100_32
+2025/11/30 16:35:50 [register] file=file_lmCcH.txt size=28217 version=1 host=load_peer_100_32
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_33 addr=http://192.168.1.14:9000 files=5
+2025/11/30 16:35:51 [register] file=file_jS6ak.txt size=13163 version=1 host=load_peer_100_33
+2025/11/30 16:35:51 [register] file=file_wG1HI.txt size=34393 version=1 host=load_peer_100_33
+2025/11/30 16:35:51 [register] file=file_PGBAZ.txt size=46970 version=1 host=load_peer_100_33
+2025/11/30 16:35:51 [register] file=file_ydrxi.txt size=38721 version=1 host=load_peer_100_33
+2025/11/30 16:35:51 [register] file=file_s8rkG.txt size=1738 version=1 host=load_peer_100_33
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_34 addr=http://192.168.1.95:9000 files=5
+2025/11/30 16:35:51 [register] file=file_VFsEK.txt size=15584 version=1 host=load_peer_100_34
+2025/11/30 16:35:51 [register] file=file_O06jS.txt size=20961 version=1 host=load_peer_100_34
+2025/11/30 16:35:51 [register] file=file_SQf5V.txt size=46591 version=1 host=load_peer_100_34
+2025/11/30 16:35:51 [register] file=file_Fi1Mv.txt size=1710 version=1 host=load_peer_100_34
+2025/11/30 16:35:51 [register] file=file_TTWXR.txt size=8490 version=1 host=load_peer_100_34
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_35 addr=http://192.168.1.7:9000 files=5
+2025/11/30 16:35:51 [register] file=file_oN5YB.txt size=35216 version=1 host=load_peer_100_35
+2025/11/30 16:35:51 [register] file=file_GCMvh.txt size=7368 version=1 host=load_peer_100_35
+2025/11/30 16:35:51 [register] file=file_mFuLy.txt size=19211 version=1 host=load_peer_100_35
+2025/11/30 16:35:51 [register] file=file_mTqWk.txt size=22768 version=1 host=load_peer_100_35
+2025/11/30 16:35:51 [register] file=file_ATsXq.txt size=35759 version=1 host=load_peer_100_35
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_36 addr=http://192.168.1.30:9000 files=5
+2025/11/30 16:35:51 [register] file=file_PgIUW.txt size=9592 version=1 host=load_peer_100_36
+2025/11/30 16:35:51 [register] file=file_NrSzI.txt size=35974 version=1 host=load_peer_100_36
+2025/11/30 16:35:51 [register] file=file_VzB5q.txt size=6489 version=1 host=load_peer_100_36
+2025/11/30 16:35:51 [register] file=file_YTXjA.txt size=38541 version=1 host=load_peer_100_36
+2025/11/30 16:35:51 [register] file=file_ZXHAL.txt size=46785 version=1 host=load_peer_100_36
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_37 addr=http://192.168.1.111:9000 files=5
+2025/11/30 16:35:51 [register] file=file_Gmgiy.txt size=29667 version=1 host=load_peer_100_37
+2025/11/30 16:35:51 [register] file=file_r05nF.txt size=44263 version=1 host=load_peer_100_37
+2025/11/30 16:35:51 [register] file=file_ygSww.txt size=48222 version=1 host=load_peer_100_37
+2025/11/30 16:35:51 [register] file=file_vvVzE.txt size=8385 version=1 host=load_peer_100_37
+2025/11/30 16:35:51 [register] file=file_oZnTy.txt size=22095 version=1 host=load_peer_100_37
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_38 addr=http://192.168.1.171:9000 files=5
+2025/11/30 16:35:51 [register] file=file_PZIfd.txt size=49172 version=1 host=load_peer_100_38
+2025/11/30 16:35:51 [register] file=file_X7vkd.txt size=45360 version=1 host=load_peer_100_38
+2025/11/30 16:35:51 [register] file=file_7yFoL.txt size=16208 version=1 host=load_peer_100_38
+2025/11/30 16:35:51 [register] file=file_4Jnb4.txt size=13917 version=1 host=load_peer_100_38
+2025/11/30 16:35:51 [register] file=file_yeoTF.txt size=29625 version=1 host=load_peer_100_38
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_39 addr=http://192.168.1.153:9000 files=5
+2025/11/30 16:35:51 [register] file=file_KXD4f.txt size=44388 version=1 host=load_peer_100_39
+2025/11/30 16:35:51 [register] file=file_HWO1C.txt size=36805 version=1 host=load_peer_100_39
+2025/11/30 16:35:51 [register] file=file_BuwpU.txt size=12695 version=1 host=load_peer_100_39
+2025/11/30 16:35:51 [register] file=file_vrEDn.txt size=30114 version=1 host=load_peer_100_39
+2025/11/30 16:35:51 [register] file=file_o9lga.txt size=6742 version=1 host=load_peer_100_39
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_40 addr=http://192.168.1.252:9000 files=5
+2025/11/30 16:35:51 [register] file=file_SiYTq.txt size=32531 version=1 host=load_peer_100_40
+2025/11/30 16:35:51 [register] file=file_m3y91.txt size=30997 version=1 host=load_peer_100_40
+2025/11/30 16:35:51 [register] file=file_I905y.txt size=9931 version=1 host=load_peer_100_40
+2025/11/30 16:35:51 [register] file=file_Sn60w.txt size=8908 version=1 host=load_peer_100_40
+2025/11/30 16:35:51 [register] file=file_ZK0KP.txt size=49199 version=1 host=load_peer_100_40
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_41 addr=http://192.168.1.177:9000 files=5
+2025/11/30 16:35:51 [register] file=file_cY1mQ.txt size=44694 version=1 host=load_peer_100_41
+2025/11/30 16:35:51 [register] file=file_qe5VL.txt size=36685 version=1 host=load_peer_100_41
+2025/11/30 16:35:51 [register] file=file_ILTw4.txt size=45702 version=1 host=load_peer_100_41
+2025/11/30 16:35:51 [register] file=file_a3pdM.txt size=26579 version=1 host=load_peer_100_41
+2025/11/30 16:35:51 [register] file=file_xfcRW.txt size=39982 version=1 host=load_peer_100_41
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_42 addr=http://192.168.1.179:9000 files=5
+2025/11/30 16:35:51 [register] file=file_xJ39S.txt size=33619 version=1 host=load_peer_100_42
+2025/11/30 16:35:51 [register] file=file_WsCY9.txt size=39134 version=1 host=load_peer_100_42
+2025/11/30 16:35:51 [register] file=file_qguVS.txt size=30715 version=1 host=load_peer_100_42
+2025/11/30 16:35:51 [register] file=file_R5nRE.txt size=2750 version=1 host=load_peer_100_42
+2025/11/30 16:35:51 [register] file=file_BEkq6.txt size=31240 version=1 host=load_peer_100_42
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_43 addr=http://192.168.1.71:9000 files=5
+2025/11/30 16:35:51 [register] file=file_LrCe7.txt size=4715 version=1 host=load_peer_100_43
+2025/11/30 16:35:51 [register] file=file_ZzaZI.txt size=14015 version=1 host=load_peer_100_43
+2025/11/30 16:35:51 [register] file=file_qheZr.txt size=27781 version=1 host=load_peer_100_43
+2025/11/30 16:35:51 [register] file=file_ko975.txt size=3239 version=1 host=load_peer_100_43
+2025/11/30 16:35:51 [register] file=file_fMlK5.txt size=27298 version=1 host=load_peer_100_43
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_44 addr=http://192.168.1.250:9000 files=5
+2025/11/30 16:35:51 [register] file=file_kRAj2.txt size=43320 version=1 host=load_peer_100_44
+2025/11/30 16:35:51 [register] file=file_0xD1s.txt size=14722 version=1 host=load_peer_100_44
+2025/11/30 16:35:51 [register] file=file_Hswcf.txt size=6205 version=1 host=load_peer_100_44
+2025/11/30 16:35:51 [register] file=file_wOiHg.txt size=22446 version=1 host=load_peer_100_44
+2025/11/30 16:35:51 [register] file=file_Zy9hD.txt size=4302 version=1 host=load_peer_100_44
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_45 addr=http://192.168.1.62:9000 files=5
+2025/11/30 16:35:51 [register] file=file_mJEpT.txt size=44575 version=1 host=load_peer_100_45
+2025/11/30 16:35:51 [register] file=file_FCMfs.txt size=44305 version=1 host=load_peer_100_45
+2025/11/30 16:35:51 [register] file=file_5xhaA.txt size=22854 version=1 host=load_peer_100_45
+2025/11/30 16:35:51 [register] file=file_vkUdW.txt size=24656 version=1 host=load_peer_100_45
+2025/11/30 16:35:51 [register] file=file_DiGJR.txt size=46539 version=1 host=load_peer_100_45
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_46 addr=http://192.168.1.26:9000 files=5
+2025/11/30 16:35:51 [register] file=file_BCZs9.txt size=5761 version=1 host=load_peer_100_46
+2025/11/30 16:35:51 [register] file=file_JblvG.txt size=15617 version=1 host=load_peer_100_46
+2025/11/30 16:35:51 [register] file=file_b1Szd.txt size=16357 version=1 host=load_peer_100_46
+2025/11/30 16:35:51 [register] file=file_uwNX1.txt size=15025 version=1 host=load_peer_100_46
+2025/11/30 16:35:51 [register] file=file_bDj7L.txt size=20825 version=1 host=load_peer_100_46
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_47 addr=http://192.168.1.162:9000 files=5
+2025/11/30 16:35:51 [register] file=file_n4HGY.txt size=9543 version=1 host=load_peer_100_47
+2025/11/30 16:35:51 [register] file=file_Pupsa.txt size=36541 version=1 host=load_peer_100_47
+2025/11/30 16:35:51 [register] file=file_bRsUP.txt size=44764 version=1 host=load_peer_100_47
+2025/11/30 16:35:51 [register] file=file_RBLzo.txt size=47336 version=1 host=load_peer_100_47
+2025/11/30 16:35:51 [register] file=file_yVQwC.txt size=14208 version=1 host=load_peer_100_47
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_48 addr=http://192.168.1.169:9000 files=5
+2025/11/30 16:35:51 [register] file=file_jGYHD.txt size=10284 version=1 host=load_peer_100_48
+2025/11/30 16:35:51 [register] file=file_tLXh9.txt size=33375 version=1 host=load_peer_100_48
+2025/11/30 16:35:51 [register] file=file_js47N.txt size=47871 version=1 host=load_peer_100_48
+2025/11/30 16:35:51 [register] file=file_QgVwp.txt size=39687 version=1 host=load_peer_100_48
+2025/11/30 16:35:51 [register] file=file_jzQAD.txt size=32526 version=1 host=load_peer_100_48
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_49 addr=http://192.168.1.110:9000 files=5
+2025/11/30 16:35:51 [register] file=file_mUUtV.txt size=16916 version=1 host=load_peer_100_49
+2025/11/30 16:35:51 [register] file=file_NxKe5.txt size=31665 version=1 host=load_peer_100_49
+2025/11/30 16:35:51 [register] file=file_3qj5d.txt size=41574 version=1 host=load_peer_100_49
+2025/11/30 16:35:51 [register] file=file_QoLIp.txt size=43692 version=1 host=load_peer_100_49
+2025/11/30 16:35:51 [register] file=file_chjcD.txt size=27527 version=1 host=load_peer_100_49
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_50 addr=http://192.168.1.161:9000 files=5
+2025/11/30 16:35:51 [register] file=file_Q1jIk.txt size=34771 version=1 host=load_peer_100_50
+2025/11/30 16:35:51 [register] file=file_rlNTa.txt size=14091 version=1 host=load_peer_100_50
+2025/11/30 16:35:51 [register] file=file_HiZ3y.txt size=44604 version=1 host=load_peer_100_50
+2025/11/30 16:35:51 [register] file=file_TKIh5.txt size=27952 version=1 host=load_peer_100_50
+2025/11/30 16:35:51 [register] file=file_fVb71.txt size=4923 version=1 host=load_peer_100_50
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_51 addr=http://192.168.1.86:9000 files=5
+2025/11/30 16:35:51 [register] file=file_JjEOF.txt size=15300 version=1 host=load_peer_100_51
+2025/11/30 16:35:51 [register] file=file_5tt59.txt size=47372 version=1 host=load_peer_100_51
+2025/11/30 16:35:51 [register] file=file_jUi6U.txt size=28238 version=1 host=load_peer_100_51
+2025/11/30 16:35:51 [register] file=file_HirBI.txt size=48911 version=1 host=load_peer_100_51
+2025/11/30 16:35:51 [register] file=file_wlnqP.txt size=32269 version=1 host=load_peer_100_51
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_52 addr=http://192.168.1.97:9000 files=5
+2025/11/30 16:35:51 [register] file=file_Liwka.txt size=28896 version=1 host=load_peer_100_52
+2025/11/30 16:35:51 [register] file=file_Prm4r.txt size=5694 version=1 host=load_peer_100_52
+2025/11/30 16:35:51 [register] file=file_zhf7v.txt size=9136 version=1 host=load_peer_100_52
+2025/11/30 16:35:51 [register] file=file_wzLH3.txt size=41966 version=1 host=load_peer_100_52
+2025/11/30 16:35:51 [register] file=file_2V5v6.txt size=28910 version=1 host=load_peer_100_52
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_53 addr=http://192.168.1.178:9000 files=5
+2025/11/30 16:35:51 [register] file=file_Pt5kT.txt size=23606 version=1 host=load_peer_100_53
+2025/11/30 16:35:51 [register] file=file_R1WsO.txt size=14441 version=1 host=load_peer_100_53
+2025/11/30 16:35:51 [register] file=file_Wr3Rn.txt size=39889 version=1 host=load_peer_100_53
+2025/11/30 16:35:51 [register] file=file_RtHyF.txt size=45073 version=1 host=load_peer_100_53
+2025/11/30 16:35:51 [register] file=file_byo1M.txt size=31686 version=1 host=load_peer_100_53
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_54 addr=http://192.168.1.139:9000 files=5
+2025/11/30 16:35:51 [register] file=file_LwFNR.txt size=10932 version=1 host=load_peer_100_54
+2025/11/30 16:35:51 [register] file=file_ji4fa.txt size=3777 version=1 host=load_peer_100_54
+2025/11/30 16:35:51 [register] file=file_nQYSq.txt size=14532 version=1 host=load_peer_100_54
+2025/11/30 16:35:51 [register] file=file_FQ4ah.txt size=19483 version=1 host=load_peer_100_54
+2025/11/30 16:35:51 [register] file=file_lrS9q.txt size=20159 version=1 host=load_peer_100_54
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_55 addr=http://192.168.1.175:9000 files=5
+2025/11/30 16:35:51 [register] file=file_fyabk.txt size=38616 version=1 host=load_peer_100_55
+2025/11/30 16:35:51 [register] file=file_UONdF.txt size=7482 version=1 host=load_peer_100_55
+2025/11/30 16:35:51 [register] file=file_nnPTz.txt size=16296 version=1 host=load_peer_100_55
+2025/11/30 16:35:51 [register] file=file_gLpHH.txt size=46348 version=1 host=load_peer_100_55
+2025/11/30 16:35:51 [register] file=file_VeaCh.txt size=23756 version=1 host=load_peer_100_55
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_56 addr=http://192.168.1.250:9000 files=5
+2025/11/30 16:35:51 [register] file=file_xlLSd.txt size=33827 version=1 host=load_peer_100_56
+2025/11/30 16:35:51 [register] file=file_SDsNt.txt size=29263 version=1 host=load_peer_100_56
+2025/11/30 16:35:51 [register] file=file_myuwE.txt size=47741 version=1 host=load_peer_100_56
+2025/11/30 16:35:51 [register] file=file_hgcVK.txt size=3290 version=1 host=load_peer_100_56
+2025/11/30 16:35:51 [register] file=file_xmubG.txt size=3040 version=1 host=load_peer_100_56
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_57 addr=http://192.168.1.82:9000 files=5
+2025/11/30 16:35:51 [register] file=file_mqFI8.txt size=12857 version=1 host=load_peer_100_57
+2025/11/30 16:35:51 [register] file=file_pG66G.txt size=3351 version=1 host=load_peer_100_57
+2025/11/30 16:35:51 [register] file=file_scB5U.txt size=44564 version=1 host=load_peer_100_57
+2025/11/30 16:35:51 [register] file=file_rAQbD.txt size=6352 version=1 host=load_peer_100_57
+2025/11/30 16:35:51 [register] file=file_K3Ua0.txt size=42204 version=1 host=load_peer_100_57
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_58 addr=http://192.168.1.3:9000 files=5
+2025/11/30 16:35:51 [register] file=file_qsZdL.txt size=26024 version=1 host=load_peer_100_58
+2025/11/30 16:35:51 [register] file=file_jSLvt.txt size=37345 version=1 host=load_peer_100_58
+2025/11/30 16:35:51 [register] file=file_QDnu7.txt size=11839 version=1 host=load_peer_100_58
+2025/11/30 16:35:51 [register] file=file_TgSIH.txt size=40409 version=1 host=load_peer_100_58
+2025/11/30 16:35:51 [register] file=file_d0aS9.txt size=13518 version=1 host=load_peer_100_58
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_59 addr=http://192.168.1.72:9000 files=5
+2025/11/30 16:35:51 [register] file=file_OZUp0.txt size=4691 version=1 host=load_peer_100_59
+2025/11/30 16:35:51 [register] file=file_NORBn.txt size=17419 version=1 host=load_peer_100_59
+2025/11/30 16:35:51 [register] file=file_j8OFP.txt size=13508 version=1 host=load_peer_100_59
+2025/11/30 16:35:51 [register] file=file_4B9Km.txt size=20165 version=1 host=load_peer_100_59
+2025/11/30 16:35:51 [register] file=file_e76YZ.txt size=39226 version=1 host=load_peer_100_59
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_60 addr=http://192.168.1.220:9000 files=5
+2025/11/30 16:35:51 [register] file=file_f56t2.txt size=2437 version=1 host=load_peer_100_60
+2025/11/30 16:35:51 [register] file=file_RwiJN.txt size=20153 version=1 host=load_peer_100_60
+2025/11/30 16:35:51 [register] file=file_7a4nu.txt size=15771 version=1 host=load_peer_100_60
+2025/11/30 16:35:51 [register] file=file_m2oX5.txt size=3343 version=1 host=load_peer_100_60
+2025/11/30 16:35:51 [register] file=file_7yqtI.txt size=45784 version=1 host=load_peer_100_60
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_61 addr=http://192.168.1.167:9000 files=5
+2025/11/30 16:35:51 [register] file=file_IVr9D.txt size=49800 version=1 host=load_peer_100_61
+2025/11/30 16:35:51 [register] file=file_oBrUH.txt size=5380 version=1 host=load_peer_100_61
+2025/11/30 16:35:51 [register] file=file_nDKFh.txt size=9815 version=1 host=load_peer_100_61
+2025/11/30 16:35:51 [register] file=file_TaEoA.txt size=17400 version=1 host=load_peer_100_61
+2025/11/30 16:35:51 [register] file=file_dTSui.txt size=3761 version=1 host=load_peer_100_61
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_62 addr=http://192.168.1.46:9000 files=5
+2025/11/30 16:35:51 [register] file=file_iS8b0.txt size=36902 version=1 host=load_peer_100_62
+2025/11/30 16:35:51 [register] file=file_YcjfJ.txt size=27713 version=1 host=load_peer_100_62
+2025/11/30 16:35:51 [register] file=file_gYmcQ.txt size=47727 version=1 host=load_peer_100_62
+2025/11/30 16:35:51 [register] file=file_vLzRz.txt size=24056 version=1 host=load_peer_100_62
+2025/11/30 16:35:51 [register] file=file_bhU2o.txt size=48432 version=1 host=load_peer_100_62
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_63 addr=http://192.168.1.156:9000 files=5
+2025/11/30 16:35:51 [register] file=file_eQdiA.txt size=27222 version=1 host=load_peer_100_63
+2025/11/30 16:35:51 [register] file=file_JEHcx.txt size=3908 version=1 host=load_peer_100_63
+2025/11/30 16:35:51 [register] file=file_Q93tY.txt size=6729 version=1 host=load_peer_100_63
+2025/11/30 16:35:51 [register] file=file_3ZcJQ.txt size=37374 version=1 host=load_peer_100_63
+2025/11/30 16:35:51 [register] file=file_evVP7.txt size=41579 version=1 host=load_peer_100_63
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_64 addr=http://192.168.1.25:9000 files=5
+2025/11/30 16:35:51 [register] file=file_Iyhsr.txt size=25277 version=1 host=load_peer_100_64
+2025/11/30 16:35:51 [register] file=file_aMyPA.txt size=28261 version=1 host=load_peer_100_64
+2025/11/30 16:35:51 [register] file=file_tPkYC.txt size=27366 version=1 host=load_peer_100_64
+2025/11/30 16:35:51 [register] file=file_AiQLX.txt size=24336 version=1 host=load_peer_100_64
+2025/11/30 16:35:51 [register] file=file_GBuv5.txt size=35807 version=1 host=load_peer_100_64
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_65 addr=http://192.168.1.170:9000 files=5
+2025/11/30 16:35:51 [register] file=file_S7zFp.txt size=26012 version=1 host=load_peer_100_65
+2025/11/30 16:35:51 [register] file=file_RhCBl.txt size=48369 version=1 host=load_peer_100_65
+2025/11/30 16:35:51 [register] file=file_D7O3T.txt size=46412 version=1 host=load_peer_100_65
+2025/11/30 16:35:51 [register] file=file_i5MQC.txt size=42835 version=1 host=load_peer_100_65
+2025/11/30 16:35:51 [register] file=file_DNJ2h.txt size=4977 version=1 host=load_peer_100_65
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_66 addr=http://192.168.1.115:9000 files=5
+2025/11/30 16:35:51 [register] file=file_xoQK3.txt size=18575 version=1 host=load_peer_100_66
+2025/11/30 16:35:51 [register] file=file_1TPtC.txt size=23509 version=1 host=load_peer_100_66
+2025/11/30 16:35:51 [register] file=file_3Cu1e.txt size=23130 version=1 host=load_peer_100_66
+2025/11/30 16:35:51 [register] file=file_tFCKk.txt size=34249 version=1 host=load_peer_100_66
+2025/11/30 16:35:51 [register] file=file_tYj1L.txt size=41477 version=1 host=load_peer_100_66
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_67 addr=http://192.168.1.5:9000 files=5
+2025/11/30 16:35:51 [register] file=file_SVxWw.txt size=21233 version=1 host=load_peer_100_67
+2025/11/30 16:35:51 [register] file=file_vBiA8.txt size=16457 version=1 host=load_peer_100_67
+2025/11/30 16:35:51 [register] file=file_atGva.txt size=47630 version=1 host=load_peer_100_67
+2025/11/30 16:35:51 [register] file=file_HGrQw.txt size=34917 version=1 host=load_peer_100_67
+2025/11/30 16:35:51 [register] file=file_qZVCY.txt size=40248 version=1 host=load_peer_100_67
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_68 addr=http://192.168.1.61:9000 files=5
+2025/11/30 16:35:51 [register] file=file_PkLT9.txt size=45294 version=1 host=load_peer_100_68
+2025/11/30 16:35:51 [register] file=file_98trj.txt size=43341 version=1 host=load_peer_100_68
+2025/11/30 16:35:51 [register] file=file_pX2hY.txt size=2009 version=1 host=load_peer_100_68
+2025/11/30 16:35:51 [register] file=file_9Q7Lc.txt size=27429 version=1 host=load_peer_100_68
+2025/11/30 16:35:51 [register] file=file_IUXjJ.txt size=33806 version=1 host=load_peer_100_68
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_69 addr=http://192.168.1.4:9000 files=5
+2025/11/30 16:35:51 [register] file=file_UvZil.txt size=32319 version=1 host=load_peer_100_69
+2025/11/30 16:35:51 [register] file=file_cQBut.txt size=2334 version=1 host=load_peer_100_69
+2025/11/30 16:35:51 [register] file=file_XwqcS.txt size=15546 version=1 host=load_peer_100_69
+2025/11/30 16:35:51 [register] file=file_ecHRU.txt size=23557 version=1 host=load_peer_100_69
+2025/11/30 16:35:51 [register] file=file_NgANY.txt size=23823 version=1 host=load_peer_100_69
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_70 addr=http://192.168.1.245:9000 files=5
+2025/11/30 16:35:51 [register] file=file_B0tQ5.txt size=16838 version=1 host=load_peer_100_70
+2025/11/30 16:35:51 [register] file=file_C6jgh.txt size=35739 version=1 host=load_peer_100_70
+2025/11/30 16:35:51 [register] file=file_7njTf.txt size=11708 version=1 host=load_peer_100_70
+2025/11/30 16:35:51 [register] file=file_BUIXV.txt size=2381 version=1 host=load_peer_100_70
+2025/11/30 16:35:51 [register] file=file_Qpec4.txt size=23504 version=1 host=load_peer_100_70
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_71 addr=http://192.168.1.65:9000 files=5
+2025/11/30 16:35:51 [register] file=file_ykoDW.txt size=23389 version=1 host=load_peer_100_71
+2025/11/30 16:35:51 [register] file=file_Lxqyk.txt size=26129 version=1 host=load_peer_100_71
+2025/11/30 16:35:51 [register] file=file_6Ar5n.txt size=27063 version=1 host=load_peer_100_71
+2025/11/30 16:35:51 [register] file=file_ZTjpx.txt size=11955 version=1 host=load_peer_100_71
+2025/11/30 16:35:51 [register] file=file_M22hi.txt size=46503 version=1 host=load_peer_100_71
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_72 addr=http://192.168.1.12:9000 files=5
+2025/11/30 16:35:51 [register] file=file_ofi6z.txt size=1278 version=1 host=load_peer_100_72
+2025/11/30 16:35:51 [register] file=file_HxgTr.txt size=9722 version=1 host=load_peer_100_72
+2025/11/30 16:35:51 [register] file=file_OrAzB.txt size=15414 version=1 host=load_peer_100_72
+2025/11/30 16:35:51 [register] file=file_6TUsQ.txt size=28858 version=1 host=load_peer_100_72
+2025/11/30 16:35:51 [register] file=file_mJQ8E.txt size=3472 version=1 host=load_peer_100_72
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_73 addr=http://192.168.1.96:9000 files=5
+2025/11/30 16:35:51 [register] file=file_eAYPJ.txt size=35409 version=1 host=load_peer_100_73
+2025/11/30 16:35:51 [register] file=file_bQKIN.txt size=24528 version=1 host=load_peer_100_73
+2025/11/30 16:35:51 [register] file=file_1PJB2.txt size=18778 version=1 host=load_peer_100_73
+2025/11/30 16:35:51 [register] file=file_ggTSy.txt size=47759 version=1 host=load_peer_100_73
+2025/11/30 16:35:51 [register] file=file_v1cYZ.txt size=27540 version=1 host=load_peer_100_73
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_74 addr=http://192.168.1.251:9000 files=5
+2025/11/30 16:35:51 [register] file=file_iqznf.txt size=9163 version=1 host=load_peer_100_74
+2025/11/30 16:35:51 [register] file=file_ClCTf.txt size=7482 version=1 host=load_peer_100_74
+2025/11/30 16:35:51 [register] file=file_Cexoy.txt size=21794 version=1 host=load_peer_100_74
+2025/11/30 16:35:51 [register] file=file_28sZJ.txt size=7022 version=1 host=load_peer_100_74
+2025/11/30 16:35:51 [register] file=file_xJ1l9.txt size=2543 version=1 host=load_peer_100_74
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_75 addr=http://192.168.1.205:9000 files=5
+2025/11/30 16:35:51 [register] file=file_JZwG4.txt size=20855 version=1 host=load_peer_100_75
+2025/11/30 16:35:51 [register] file=file_VhKfx.txt size=12177 version=1 host=load_peer_100_75
+2025/11/30 16:35:51 [register] file=file_ABs0D.txt size=26011 version=1 host=load_peer_100_75
+2025/11/30 16:35:51 [register] file=file_UKPnS.txt size=14063 version=1 host=load_peer_100_75
+2025/11/30 16:35:51 [register] file=file_l6en0.txt size=30809 version=1 host=load_peer_100_75
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_76 addr=http://192.168.1.152:9000 files=5
+2025/11/30 16:35:51 [register] file=file_xY61R.txt size=19711 version=1 host=load_peer_100_76
+2025/11/30 16:35:51 [register] file=file_eYP9Q.txt size=46181 version=1 host=load_peer_100_76
+2025/11/30 16:35:51 [register] file=file_w8jmi.txt size=15606 version=1 host=load_peer_100_76
+2025/11/30 16:35:51 [register] file=file_L3Zp9.txt size=42953 version=1 host=load_peer_100_76
+2025/11/30 16:35:51 [register] file=file_eERML.txt size=18295 version=1 host=load_peer_100_76
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_77 addr=http://192.168.1.209:9000 files=5
+2025/11/30 16:35:51 [register] file=file_eZ0kw.txt size=26407 version=1 host=load_peer_100_77
+2025/11/30 16:35:51 [register] file=file_ELQ2l.txt size=27176 version=1 host=load_peer_100_77
+2025/11/30 16:35:51 [register] file=file_1qrCi.txt size=5689 version=1 host=load_peer_100_77
+2025/11/30 16:35:51 [register] file=file_4lfd8.txt size=6396 version=1 host=load_peer_100_77
+2025/11/30 16:35:51 [register] file=file_xNihy.txt size=1110 version=1 host=load_peer_100_77
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_78 addr=http://192.168.1.223:9000 files=5
+2025/11/30 16:35:51 [register] file=file_tfJWz.txt size=31569 version=1 host=load_peer_100_78
+2025/11/30 16:35:51 [register] file=file_8wLOp.txt size=43604 version=1 host=load_peer_100_78
+2025/11/30 16:35:51 [register] file=file_5U5SC.txt size=39616 version=1 host=load_peer_100_78
+2025/11/30 16:35:51 [register] file=file_IySHj.txt size=28805 version=1 host=load_peer_100_78
+2025/11/30 16:35:51 [register] file=file_Y7Rd7.txt size=20635 version=1 host=load_peer_100_78
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_79 addr=http://192.168.1.8:9000 files=5
+2025/11/30 16:35:51 [register] file=file_UJ9Ex.txt size=47183 version=1 host=load_peer_100_79
+2025/11/30 16:35:51 [register] file=file_EFoZV.txt size=21425 version=1 host=load_peer_100_79
+2025/11/30 16:35:51 [register] file=file_6drCu.txt size=41581 version=1 host=load_peer_100_79
+2025/11/30 16:35:51 [register] file=file_p1fyZ.txt size=47520 version=1 host=load_peer_100_79
+2025/11/30 16:35:51 [register] file=file_6aRuO.txt size=23994 version=1 host=load_peer_100_79
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_80 addr=http://192.168.1.139:9000 files=5
+2025/11/30 16:35:51 [register] file=file_TUcvB.txt size=39933 version=1 host=load_peer_100_80
+2025/11/30 16:35:51 [register] file=file_fLhnh.txt size=29969 version=1 host=load_peer_100_80
+2025/11/30 16:35:51 [register] file=file_UBbez.txt size=35219 version=1 host=load_peer_100_80
+2025/11/30 16:35:51 [register] file=file_4cwK7.txt size=1827 version=1 host=load_peer_100_80
+2025/11/30 16:35:51 [register] file=file_fbphe.txt size=46553 version=1 host=load_peer_100_80
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_81 addr=http://192.168.1.143:9000 files=5
+2025/11/30 16:35:51 [register] file=file_2EQS7.txt size=13387 version=1 host=load_peer_100_81
+2025/11/30 16:35:51 [register] file=file_boriP.txt size=16553 version=1 host=load_peer_100_81
+2025/11/30 16:35:51 [register] file=file_HZgeH.txt size=31963 version=1 host=load_peer_100_81
+2025/11/30 16:35:51 [register] file=file_n4Hlh.txt size=28265 version=1 host=load_peer_100_81
+2025/11/30 16:35:51 [register] file=file_6yg2z.txt size=45582 version=1 host=load_peer_100_81
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_82 addr=http://192.168.1.235:9000 files=5
+2025/11/30 16:35:51 [register] file=file_nE9b4.txt size=49109 version=1 host=load_peer_100_82
+2025/11/30 16:35:51 [register] file=file_ZpthU.txt size=19144 version=1 host=load_peer_100_82
+2025/11/30 16:35:51 [register] file=file_RJybx.txt size=39664 version=1 host=load_peer_100_82
+2025/11/30 16:35:51 [register] file=file_cVZeD.txt size=9095 version=1 host=load_peer_100_82
+2025/11/30 16:35:51 [register] file=file_9Tu1h.txt size=26420 version=1 host=load_peer_100_82
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_83 addr=http://192.168.1.13:9000 files=5
+2025/11/30 16:35:51 [register] file=file_S67Ue.txt size=40720 version=1 host=load_peer_100_83
+2025/11/30 16:35:51 [register] file=file_ZYpP9.txt size=5197 version=1 host=load_peer_100_83
+2025/11/30 16:35:51 [register] file=file_I9n8f.txt size=7359 version=1 host=load_peer_100_83
+2025/11/30 16:35:51 [register] file=file_dlRlv.txt size=18369 version=1 host=load_peer_100_83
+2025/11/30 16:35:51 [register] file=file_TDi78.txt size=30998 version=1 host=load_peer_100_83
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_84 addr=http://192.168.1.138:9000 files=5
+2025/11/30 16:35:51 [register] file=file_pD8I9.txt size=24489 version=1 host=load_peer_100_84
+2025/11/30 16:35:51 [register] file=file_oWdo9.txt size=1957 version=1 host=load_peer_100_84
+2025/11/30 16:35:51 [register] file=file_cJnLV.txt size=47635 version=1 host=load_peer_100_84
+2025/11/30 16:35:51 [register] file=file_lz0tQ.txt size=45198 version=1 host=load_peer_100_84
+2025/11/30 16:35:51 [register] file=file_yNTlc.txt size=48251 version=1 host=load_peer_100_84
+2025/11/30 16:35:51 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:51 [shadow] apply register
+2025/11/30 16:35:51 [register] peer=load_peer_100_85 addr=http://192.168.1.216:9000 files=5
+2025/11/30 16:35:51 [register] file=file_H2QM4.txt size=12363 version=1 host=load_peer_100_85
+2025/11/30 16:35:51 [register] file=file_gfPUf.txt size=27401 version=1 host=load_peer_100_85
+2025/11/30 16:35:51 [register] file=file_cFsR9.txt size=40125 version=1 host=load_peer_100_85
+2025/11/30 16:35:51 [register] file=file_0N16Q.txt size=4483 version=1 host=load_peer_100_85
+2025/11/30 16:35:51 [register] file=file_rzSmI.txt size=41094 version=1 host=load_peer_100_85
+2025/11/30 16:35:51 [cleanup] running pruneStale (peerTTL=45s, peers=149)
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_86 addr=http://192.168.1.159:9000 files=5
+2025/11/30 16:35:52 [register] file=file_fkAsM.txt size=19522 version=1 host=load_peer_100_86
+2025/11/30 16:35:52 [register] file=file_GqFXa.txt size=1587 version=1 host=load_peer_100_86
+2025/11/30 16:35:52 [register] file=file_SGkcd.txt size=11034 version=1 host=load_peer_100_86
+2025/11/30 16:35:52 [register] file=file_oM6ng.txt size=45401 version=1 host=load_peer_100_86
+2025/11/30 16:35:52 [register] file=file_dq3jZ.txt size=28230 version=1 host=load_peer_100_86
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_87 addr=http://192.168.1.93:9000 files=5
+2025/11/30 16:35:52 [register] file=file_KYM33.txt size=19091 version=1 host=load_peer_100_87
+2025/11/30 16:35:52 [register] file=file_zD9W6.txt size=43641 version=1 host=load_peer_100_87
+2025/11/30 16:35:52 [register] file=file_9fGoC.txt size=17742 version=1 host=load_peer_100_87
+2025/11/30 16:35:52 [register] file=file_yGA3i.txt size=2663 version=1 host=load_peer_100_87
+2025/11/30 16:35:52 [register] file=file_MEx6K.txt size=31392 version=1 host=load_peer_100_87
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_88 addr=http://192.168.1.112:9000 files=5
+2025/11/30 16:35:52 [register] file=file_DstS3.txt size=38094 version=1 host=load_peer_100_88
+2025/11/30 16:35:52 [register] file=file_haYl0.txt size=20023 version=1 host=load_peer_100_88
+2025/11/30 16:35:52 [register] file=file_Gnfdr.txt size=30628 version=1 host=load_peer_100_88
+2025/11/30 16:35:52 [register] file=file_HBTUk.txt size=17997 version=1 host=load_peer_100_88
+2025/11/30 16:35:52 [register] file=file_hDBLI.txt size=10034 version=1 host=load_peer_100_88
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_89 addr=http://192.168.1.81:9000 files=5
+2025/11/30 16:35:52 [register] file=file_vLbvP.txt size=18496 version=1 host=load_peer_100_89
+2025/11/30 16:35:52 [register] file=file_2eHfg.txt size=15928 version=1 host=load_peer_100_89
+2025/11/30 16:35:52 [register] file=file_SdKXy.txt size=5105 version=1 host=load_peer_100_89
+2025/11/30 16:35:52 [register] file=file_fWth8.txt size=22683 version=1 host=load_peer_100_89
+2025/11/30 16:35:52 [register] file=file_zuA6I.txt size=45752 version=1 host=load_peer_100_89
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_90 addr=http://192.168.1.145:9000 files=5
+2025/11/30 16:35:52 [register] file=file_83Rk0.txt size=8927 version=1 host=load_peer_100_90
+2025/11/30 16:35:52 [register] file=file_5aZJf.txt size=36534 version=1 host=load_peer_100_90
+2025/11/30 16:35:52 [register] file=file_sN0xi.txt size=34195 version=1 host=load_peer_100_90
+2025/11/30 16:35:52 [register] file=file_qf9KR.txt size=23680 version=1 host=load_peer_100_90
+2025/11/30 16:35:52 [register] file=file_YnArI.txt size=23225 version=1 host=load_peer_100_90
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_91 addr=http://192.168.1.15:9000 files=5
+2025/11/30 16:35:52 [register] file=file_PrEZP.txt size=11170 version=1 host=load_peer_100_91
+2025/11/30 16:35:52 [register] file=file_v7Kax.txt size=11112 version=1 host=load_peer_100_91
+2025/11/30 16:35:52 [register] file=file_VnCCh.txt size=27080 version=1 host=load_peer_100_91
+2025/11/30 16:35:52 [register] file=file_W7hy8.txt size=49984 version=1 host=load_peer_100_91
+2025/11/30 16:35:52 [register] file=file_usGul.txt size=37391 version=1 host=load_peer_100_91
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_92 addr=http://192.168.1.66:9000 files=5
+2025/11/30 16:35:52 [register] file=file_4LCdm.txt size=20145 version=1 host=load_peer_100_92
+2025/11/30 16:35:52 [register] file=file_CMU93.txt size=46853 version=1 host=load_peer_100_92
+2025/11/30 16:35:52 [register] file=file_kWQJE.txt size=27189 version=1 host=load_peer_100_92
+2025/11/30 16:35:52 [register] file=file_EiGFI.txt size=19132 version=1 host=load_peer_100_92
+2025/11/30 16:35:52 [register] file=file_lG1Bo.txt size=33198 version=1 host=load_peer_100_92
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_93 addr=http://192.168.1.163:9000 files=5
+2025/11/30 16:35:52 [register] file=file_7A0uV.txt size=38690 version=1 host=load_peer_100_93
+2025/11/30 16:35:52 [register] file=file_ZMApd.txt size=47801 version=1 host=load_peer_100_93
+2025/11/30 16:35:52 [register] file=file_Bxl41.txt size=14299 version=1 host=load_peer_100_93
+2025/11/30 16:35:52 [register] file=file_as4e1.txt size=21463 version=1 host=load_peer_100_93
+2025/11/30 16:35:52 [register] file=file_ztc7N.txt size=14085 version=1 host=load_peer_100_93
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_94 addr=http://192.168.1.229:9000 files=5
+2025/11/30 16:35:52 [register] file=file_5OCFm.txt size=4588 version=1 host=load_peer_100_94
+2025/11/30 16:35:52 [register] file=file_lQe9e.txt size=7549 version=1 host=load_peer_100_94
+2025/11/30 16:35:52 [register] file=file_VlAgb.txt size=6159 version=1 host=load_peer_100_94
+2025/11/30 16:35:52 [register] file=file_VEDOd.txt size=37137 version=1 host=load_peer_100_94
+2025/11/30 16:35:52 [register] file=file_xISUt.txt size=2681 version=1 host=load_peer_100_94
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_95 addr=http://192.168.1.231:9000 files=5
+2025/11/30 16:35:52 [register] file=file_kDDT4.txt size=41706 version=1 host=load_peer_100_95
+2025/11/30 16:35:52 [register] file=file_UucRi.txt size=33559 version=1 host=load_peer_100_95
+2025/11/30 16:35:52 [register] file=file_3Dkv4.txt size=14341 version=1 host=load_peer_100_95
+2025/11/30 16:35:52 [register] file=file_1q8UY.txt size=45347 version=1 host=load_peer_100_95
+2025/11/30 16:35:52 [register] file=file_4myYx.txt size=3792 version=1 host=load_peer_100_95
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_96 addr=http://192.168.1.159:9000 files=5
+2025/11/30 16:35:52 [register] file=file_KVsPe.txt size=32970 version=1 host=load_peer_100_96
+2025/11/30 16:35:52 [register] file=file_jRcGx.txt size=23741 version=1 host=load_peer_100_96
+2025/11/30 16:35:52 [register] file=file_wVmHj.txt size=16130 version=1 host=load_peer_100_96
+2025/11/30 16:35:52 [register] file=file_qDH0Y.txt size=46688 version=1 host=load_peer_100_96
+2025/11/30 16:35:52 [register] file=file_k9HFr.txt size=33891 version=1 host=load_peer_100_96
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_97 addr=http://192.168.1.138:9000 files=5
+2025/11/30 16:35:52 [register] file=file_2pvzp.txt size=37411 version=1 host=load_peer_100_97
+2025/11/30 16:35:52 [register] file=file_HuYQc.txt size=16257 version=1 host=load_peer_100_97
+2025/11/30 16:35:52 [register] file=file_gGN6x.txt size=25398 version=1 host=load_peer_100_97
+2025/11/30 16:35:52 [register] file=file_QxlPU.txt size=12236 version=1 host=load_peer_100_97
+2025/11/30 16:35:52 [register] file=file_Z2Rwz.txt size=15604 version=1 host=load_peer_100_97
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_98 addr=http://192.168.1.147:9000 files=5
+2025/11/30 16:35:52 [register] file=file_6vi7c.txt size=41937 version=1 host=load_peer_100_98
+2025/11/30 16:35:52 [register] file=file_fTLcZ.txt size=15499 version=1 host=load_peer_100_98
+2025/11/30 16:35:52 [register] file=file_dnnF1.txt size=3425 version=1 host=load_peer_100_98
+2025/11/30 16:35:52 [register] file=file_0QQ9y.txt size=30046 version=1 host=load_peer_100_98
+2025/11/30 16:35:52 [register] file=file_z1w4X.txt size=4153 version=1 host=load_peer_100_98
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=load_peer_100_99 addr=http://192.168.1.20:9000 files=5
+2025/11/30 16:35:52 [register] file=file_IKLkp.txt size=22167 version=1 host=load_peer_100_99
+2025/11/30 16:35:52 [register] file=file_p9JM4.txt size=23363 version=1 host=load_peer_100_99
+2025/11/30 16:35:52 [register] file=file_c4Iw6.txt size=7023 version=1 host=load_peer_100_99
+2025/11/30 16:35:52 [register] file=file_XfXBd.txt size=31472 version=1 host=load_peer_100_99
+2025/11/30 16:35:52 [register] file=file_cnR6n.txt size=41200 version=1 host=load_peer_100_99
+2025/11/30 16:35:52 [shadow] handleSync from=127.0.0.1:54118
+2025/11/30 16:35:52 [shadow] apply register
+2025/11/30 16:35:52 [register] peer=peer_fail_1 addr=http://192.168.1.4:9000 files=1
+2025/11/30 16:35:52 [register] file=fail_test.txt size=1 version=1 host=peer_fail_1

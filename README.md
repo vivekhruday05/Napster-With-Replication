@@ -32,7 +32,7 @@ This README explains architecture, endpoints, data formats, how to run locally a
 ## Architecture
 
 - Server (Primary): authoritative state holder. Plans replication tasks, enforces leases, tracks peers/files.
-- Server (Shadow): standby state mirror receiving sync ops from primary (register/announce/heartbeat/prune). Provides read and limited write availability if primary is degraded.
+- Server (Shadow): standby state mirror receiving sync ops from primary (register/announce/heartbeat/prune). Read-only: rejects client write operations (`POST /register`, `POST /announce`, `POST /lease`, `POST /heartbeat`). Only accepts `POST /sync` from the Primary and serves read endpoints (`GET /search`, `GET /peers`, `GET /healthz`).
 - Client (Peer): hosts a small HTTP server to serve files. Registers with the master(s), heartbeats, pulls replication tasks, and announces file ownership. Supports update via lease.
 
 Key concepts:
@@ -111,6 +111,23 @@ All endpoints return JSON unless noted. Content-Type for JSON requests must be `
 	- Request: `{ "opType": "register"|"announce"|"heartbeat"|"prune", "data": RawJSON }`
 	- Response: `200 OK`
 	- Notes: Primary pushes operations; shadow applies state mutations.
+
+Shadow write policy:
+- Shadow server is strictly read-only for clients. The following endpoints return `403 Forbidden` on the shadow: `POST /register`, `POST /announce`, `POST /lease`, `POST /heartbeat`.
+- Clients should direct all writes to the Primary. Reads will fail over to the Shadow when needed.
+
+### New automated tests in `eval.py`
+
+- Shadow Read-Only Policy: Direct `POST` requests to the shadow for `/register`, `/announce`, `/lease`, `/heartbeat` should return `403`.
+- Failover with Shadow Read-Only: Crash primary, confirm shadow rejects writes; restart primary, confirm writes succeed again.
+
+### Implemented/affected server functions
+
+- `handleRegister` (server.go): rejects on shadow with `403`, plans replication on primary.
+- `handleAnnounce` (server.go): rejects on shadow with `403`, enforces lease on primary.
+- `handleLease` (server.go): rejects on shadow with `403`, grants 60s lease on primary.
+- `handleHeartbeat` (server.go): rejects on shadow with `403`; heartbeat state applied to shadow via `/sync` from primary.
+- `handleSync` (server.go): shadow applies primary's operations.
 
 - `GET /healthz`
 	- Response: `200 OK`, body `ok`

@@ -264,6 +264,12 @@ func (s *Server) handleLease(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	// Enforce read-only on shadow: ShadowAddr empty means this instance is SHADOW
+	if s.ShadowAddr == "" {
+		http.Error(w, "shadow is read-only", http.StatusForbidden)
+		log.Printf("[lease] rejected on shadow: read-only")
+		return
+	}
 	log.Printf("[lease] from=%s", r.RemoteAddr)
 	var req shared.LeaseRequest
 	if !decodeJSON(w, r, &req) {
@@ -315,6 +321,12 @@ func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	// Enforce read-only on shadow
+	if s.ShadowAddr == "" {
+		http.Error(w, "shadow is read-only", http.StatusForbidden)
+		log.Printf("[register] rejected on shadow: read-only")
+		return
+	}
 	log.Printf("[register] from=%s", r.RemoteAddr)
 	var req shared.RegisterRequest
 	if !decodeJSON(w, r, &req) {
@@ -339,6 +351,12 @@ func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	// Enforce read-only on shadow
+	if s.ShadowAddr == "" {
+		http.Error(w, "shadow is read-only", http.StatusForbidden)
+		log.Printf("[announce] rejected on shadow: read-only")
 		return
 	}
 	log.Printf("[announce] from=%s", r.RemoteAddr)
@@ -397,6 +415,12 @@ func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleHeartbeat(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	// Enforce read-only on shadow (heartbeats should be applied via /sync from primary)
+	if s.ShadowAddr == "" {
+		http.Error(w, "shadow is read-only", http.StatusForbidden)
+		log.Printf("[heartbeat] rejected on shadow: read-only")
 		return
 	}
 	log.Printf("[heartbeat] from=%s", r.RemoteAddr)
