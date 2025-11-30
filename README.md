@@ -335,3 +335,75 @@ Take note of public URL printed (e.g., `http://192.168.1.11:8080`).
 - Hash field in `FileInfo` is currently unused; you can extend the client to compute hashes to improve content integrity.
 - Shadow master pruning is simplified; the primary is authoritative. Heartbeats are synced to shadow to reduce accidental stale pruning.
 - Timeouts: client download uses a 10s timeout; adjust if pulling large files over slow networks.
+
+
+## CLI Commands
+
+The client supports several commands via the `-cmd` flag. Each command requires a server and directory.
+
+### `serve` — Run as a peer node
+Starts the peer in server mode: registers with the central server, shares files, sends heartbeats, and executes replication tasks.
+
+```bash
+./bin/client -cmd serve -server http://localhost:8080 -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
+```
+
+### `search <query>` — Find files
+Searches the network for files matching the query string.
+
+```bash
+./bin/client -cmd search -server http://localhost:8080 -dir tmp/peer1 doc
+```
+Output: Lists matching files and which peers host them.
+
+### `get <filename>` — Download a file
+Downloads a file from the network and saves it to your local directory.
+
+```bash
+./bin/client -cmd get -server http://localhost:8080 -dir tmp/peer1 doc.txt
+```
+The file is pulled from a peer and announced to the server.
+
+### `list` — List local files
+Shows all files in your shared directory.
+
+```bash
+./bin/client -cmd list -server http://localhost:8080 -dir tmp/peer1
+```
+
+### `update <filename>` — Update a file (requires write lock)
+Acquires a lease, then announces a higher version to coordinate writes across peers.
+
+```bash
+./bin/client -cmd update -server http://localhost:8080 -dir tmp/peer1 doc.txt
+```
+
+---
+
+## Quick Start (3 terminals)
+
+**Terminal 1 — Start Shadow Server:**
+```bash
+NAPSTER_SERVER_ADDR=":8081" ./bin/server
+```
+
+**Terminal 2 — Start Peer 1:**
+```bash
+mkdir -p tmp/peer1 && echo "Content v1" > tmp/peer1/doc.txt
+./bin/client -cmd serve -server http://localhost:8081 -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
+```
+
+**Terminal 3 — Start Peer 2:**
+```bash
+mkdir -p tmp/peer2
+./bin/client -cmd serve -server http://localhost:8081 -dir tmp/peer2 -bind :9002 -addr http://localhost:9002
+```
+
+Then in another terminal, try commands like:
+```bash
+./bin/client -cmd search -server http://localhost:8081 -dir tmp/peer2 doc
+./bin/client -cmd get -server http://localhost:8081 -dir tmp/peer2 doc.txt
+./bin/client -cmd list -server http://localhost:8081 -dir tmp/peer2
+```
+
+---
