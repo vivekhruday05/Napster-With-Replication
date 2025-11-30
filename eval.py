@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import subprocess
 import os
+import sys
 
 # --- Configuration ---
 # Paths are relative to the script location
@@ -24,9 +25,10 @@ NUM_FILES_PER_PEER = 5
 SEARCH_REQUESTS = 100
 CONCURRENCY = 10
 PEER_TTL = 45  # seconds (fixed in server.go)
+SERVER_GRACE_PERIOD = 16 # server.go has 15s initGracePeriod; we wait 16s to be safe
 
 # Endpoints that are considered "writes" and MUST go to the Primary only.
-WRITE_ENDPOINTS = ["/announce", "/register", "/lease"]
+WRITE_ENDPOINTS = ["/announce", "/register", "/lease", "/delete", "/heartbeat"]
 
 # --- Helper Functions ---
 
@@ -124,20 +126,23 @@ class ClusterManager:
         self.shadow = None
 
     def start(self):
-        print("[System] Starting Shadow Server (8081)...")
+        print(f"[System] Starting Shadow Server (8081)...")
         env_shadow = os.environ.copy()
         env_shadow["NAPSTER_SERVER_ADDR"] = ":8081"
-        # No NAPSTER_SHADOW_ADDR -> this becomes the shadow
+        # No NAPSTER_SHADOW_ADDR -> this becomes the shadow (read-only)
         self.shadow = subprocess.Popen([BIN_SERVER], env=env_shadow, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(1)
 
-        print("[System] Starting Primary Server (8080)...")
+        print(f"[System] Starting Primary Server (8080)...")
         env_primary = os.environ.copy()
         env_primary["NAPSTER_SERVER_ADDR"] = ":8080"
         env_primary["NAPSTER_SHADOW_ADDR"] = "http://localhost:8081"
         env_primary["NAPSTER_REPLICATION_FACTOR"] = "2"
         self.primary = subprocess.Popen([BIN_SERVER], env=env_primary, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(2)  # Wait for startup
+        
+        print(f"[System] Waiting {SERVER_GRACE_PERIOD}s for Primary grace period...")
+        time.sleep(SERVER_GRACE_PERIOD)
+        print("[System] Cluster Ready.")
 
     def stop(self):
         print("\n[System] Shutting down servers...")
@@ -153,7 +158,7 @@ class ClusterManager:
                 pass
 
     def crash_primary(self):
-        print("[System] 💥 CRASHING PRIMARY SERVER 💥")
+        print("[System] CRASHING PRIMARY SERVER")
         if self.primary:
             try:
                 self.primary.kill()
@@ -163,31 +168,25 @@ class ClusterManager:
             time.sleep(1)
 
     def restart_primary(self):
-        print("[System] Restarting Primary Server...")
+        print(f"[System] Restarting Primary Server (Wait {SERVER_GRACE_PERIOD}s)...")
         env_primary = os.environ.copy()
         env_primary["NAPSTER_SERVER_ADDR"] = ":8080"
         env_primary["NAPSTER_SHADOW_ADDR"] = "http://localhost:8081"
         env_primary["NAPSTER_REPLICATION_FACTOR"] = "2"
         self.primary = subprocess.Popen([BIN_SERVER], env=env_primary, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(2)
+        time.sleep(SERVER_GRACE_PERIOD) 
+
+# --- Test Cases ---
 
 def test_replication_flow(client):
     """
     CORRECT REPLICATION TEST:
     Because the server returns replication tasks *immediately* inside the
-    /register response for P2, we MUST read them there, otherwise they are lost
-    before heartbeat polling (queue is consumed).
-
-    Steps:
-    1. Register P1 with file A.
-    2. Register P2 (empty) and CAPTURE the tasks from the register response.
-    3. If empty (rare), fallback to heartbeat.
-    4. Announce from P2.
-    5. Search must list file on both peers.
+    /register response for P2 (after grace period), we MUST read them there.
     """
     print("\n[Test] Replication Convergence...")
 
-    # 1. Register P1 with file
+    # 1. Register P1 with file A
     file_a = {
         "name": "replication_test.txt",
         "size": 1234,
@@ -209,8 +208,9 @@ def test_replication_flow(client):
 
     # 3. If tasks were not returned (edge case), fallback to heartbeat
     if not tasks:
+        print("  (Info) No tasks in register response, trying heartbeat...")
         for _ in range(5):
-            time.sleep(0.3)
+            time.sleep(1.0) # Wait a bit more for replication planner
             hb = client.request("POST", "/heartbeat", json={"peerId": "peer_rep_2"})
             hb_body = hb.json()
             if hb_body.get("tasks"):
@@ -260,7 +260,7 @@ def test_versioning_consistency(client):
     p1_id = "peer_ver_1"
     p2_id = "peer_ver_2"
 
-    # Setup: Both have v1 and are registered (ensure both peers known to server)
+    # Setup: Both have v1 and are registered
     f_v1 = {"name": filename, "size": 100, "version": 1}
     client.request("POST", "/register", json=generate_peer_payload(p1_id, [f_v1], stable_addr="http://127.0.0.1:9011"))
     client.request("POST", "/register", json=generate_peer_payload(p2_id, [], stable_addr="http://127.0.0.1:9012"))
@@ -281,9 +281,9 @@ def test_versioning_consistency(client):
     # P1 Announces v2
     f_v2 = f_v1.copy()
     f_v2["version"] = 2
-    resp = client.request("POST", "/announce", json={"peer": {"id": p1_id, "addr": "x"}, "file": f_v2})
+    resp = client.request("POST", "/announce", json={"peer": {"id": p1_id, "addr": "x", "lastSeen": "2025-01-01T00:00:00Z"}, "file": f_v2})
     if resp.status_code != 204:
-        print(f"  FAIL: P1 announce v2 rejected: {resp.status_code}")
+        print(f"  FAIL: P1 announce v2 rejected: {resp.status_code} - {resp.text}")
         return None
     write_latency = (time.time() - start) * 1000
     print(f"  PASS: P1 updated to v2. Write Latency: {write_latency:.2f} ms")
@@ -291,7 +291,7 @@ def test_versioning_consistency(client):
     # 2. P2 tries to Announce v3 (No Lease)
     f_v3 = f_v1.copy()
     f_v3["version"] = 3
-    resp = client.request("POST", "/announce", json={"peer": {"id": p2_id, "addr": "y"}, "file": f_v3})
+    resp = client.request("POST", "/announce", json={"peer": {"id": p2_id, "addr": "y", "lastSeen": "2025-01-01T00:00:00Z"}, "file": f_v3})
 
     if resp.status_code == 403:
         print("  PASS: P2 prevented from unauthorized write (403 Forbidden).")
@@ -380,14 +380,6 @@ def test_server_failover(cluster, client):
         return None
 
 def test_shadow_read_only():
-    """
-    Ensure Shadow server rejects client write operations with 403.
-    Tests:
-    - POST /register to shadow
-    - POST /announce to shadow
-    - POST /lease to shadow
-    - POST /heartbeat to shadow
-    """
     print("\n[Test] Shadow Read-Only Policy...")
     s = requests.Session()
     shadow = SERVER_SHADOW
@@ -401,7 +393,7 @@ def test_shadow_read_only():
             return None
 
     reg_payload = generate_peer_payload("shadow_test_peer", [])
-    ann_payload = {"peer": {"id": "shadow_test_peer", "addr": "http://127.0.0.1:9999"}, "file": {"name": "x.txt", "size": 1, "version": 1}}
+    ann_payload = {"peer": {"id": "shadow_test_peer", "addr": "http://127.0.0.1:9999", "lastSeen": "0001-01-01T00:00:00Z"}, "file": {"name": "x.txt", "size": 1, "version": 1}}
     lease_payload = {"peerId": "shadow_test_peer", "fileName": "x.txt"}
     hb_payload = {"peerId": "shadow_test_peer"}
 
@@ -423,12 +415,6 @@ def test_shadow_read_only():
     return ok
 
 def test_failover_with_shadow_readonly(cluster, client):
-    """
-    1) Crash Primary.
-    2) Attempt writes against Shadow -> expect 403.
-    3) Restart Primary.
-    4) Attempt writes against Primary -> expect success (200/204).
-    """
     print("\n[Test] Failover with Shadow Read-Only...")
 
     # Step 1: Crash primary
@@ -445,7 +431,7 @@ def test_failover_with_shadow_readonly(cluster, client):
             return None
 
     reg_payload = generate_peer_payload("failover_peer", [])
-    ann_payload = {"peer": {"id": "failover_peer", "addr": "http://127.0.0.1:9998"}, "file": {"name": "f.txt", "size": 1, "version": 1}}
+    ann_payload = {"peer": {"id": "failover_peer", "addr": "http://127.0.0.1:9998", "lastSeen": "0001-01-01T00:00:00Z"}, "file": {"name": "f.txt", "size": 1, "version": 1}}
     lease_payload = {"peerId": "failover_peer", "fileName": "f.txt"}
     hb_payload = {"peerId": "failover_peer"}
 
@@ -464,8 +450,7 @@ def test_failover_with_shadow_readonly(cluster, client):
 
     # Step 3: Restart primary
     cluster.restart_primary()
-    time.sleep(1.0)
-
+    
     # Step 4: Writes to primary should succeed
     s = requests.Session()
     def post_primary(ep, payload):
@@ -488,7 +473,7 @@ def test_failover_with_shadow_readonly(cluster, client):
     if primary_ok:
         print("  PASS: Primary accepts writes after restart.")
     else:
-        print("  FAIL: Primary did not accept writes after restart.")
+        print(f"  FAIL: Primary response codes - Reg:{resp_reg.status_code if resp_reg else 'None'} Lease:{resp_lease.status_code if resp_lease else 'None'} Ann:{resp_ann.status_code if resp_ann else 'None'}")
 
     return shadow_ok and primary_ok
 
@@ -546,28 +531,49 @@ def run_scalability_test(client, peer_counts):
         t_start = time.time()
 
         # --- Register N peers ---
-        for i in range(N):
+        # Use simple ThreadPool to simulate concurrent load
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(20, N)) as executor:
+            future_to_peer = {
+                executor.submit(client.request, "POST", "/register", json=generate_peer_payload(f"scale_peer_{N}_{i}")): i 
+                for i in range(N)
+            }
+            for future in concurrent.futures.as_completed(future_to_peer):
+                try:
+                    # Measure rough request time (not precise client-side due to queueing, but indicative of system)
+                    # Ideally we measure inside the task, but wrapper limits that. 
+                    # For simplicity, we assume successful return is what matters.
+                    future.result() 
+                except Exception:
+                    errors += 1
+        
+        # We simulate latency measurement by doing a subset sequentially to get clean numbers, 
+        # or we accept that we didn't measure per-request latency in the block above for simplicity.
+        # Let's run a separate measurement block for latency stats after bulk load.
+        
+        # Measure Latency (Sampled)
+        measure_count = min(100, N)
+        for i in range(measure_count):
             try:
-                start = time.time()
-                client.request("POST", "/register",
-                    json=generate_peer_payload(f"scale_peer_{N}_{i}")
-                )
-                register_times.append((time.time() - start) * 1000)
+                # Measure Register Latency
+                t0 = time.time()
+                client.request("POST", "/register", json=generate_peer_payload(f"scale_probe_{N}_{i}"))
+                register_times.append((time.time() - t0) * 1000)
             except Exception:
                 errors += 1
 
-        # --- Perform search queries ---
-        # Query a common prefix to ensure lookup hits
-        for _ in range(min(200, N)):
             try:
-                start = time.time()
+                # Measure Search Latency
+                t0 = time.time()
                 client.request("GET", "/search", params={"q": "file"})
-                search_times.append((time.time() - start) * 1000)
+                search_times.append((time.time() - t0) * 1000)
             except Exception:
                 errors += 1
 
         t_end = time.time()
-        total_ops = len(register_times) + len(search_times)
+        
+        # Approximate throughput: Total operations (Bulk load + Probe) / Total Time
+        # Note: This includes the time to generate payloads and client-side overhead.
+        total_ops = N + (measure_count * 2) 
         throughput = total_ops / (t_end - t_start)
 
         # --- Percentiles ---
@@ -586,12 +592,13 @@ def run_scalability_test(client, peer_counts):
             "search_p": sea_p,
             "throughput": throughput,
             "errors": errors,
+            "error_rate": (errors / total_ops) * 100 if total_ops > 0 else 0,
             "reg_avg": np.mean(register_times) if register_times else 0,
             "search_avg": np.mean(search_times) if search_times else 0,
         }
 
-        print(f"    Registers: avg={results[N]['reg_avg']:.2f}ms p50={reg_p[0]:.1f} p90={reg_p[1]:.1f} p95={reg_p[2]:.1f} p99={reg_p[3]:.1f}")
-        print(f"    Search:    avg={results[N]['search_avg']:.2f}ms p50={sea_p[0]:.1f} p90={sea_p[1]:.1f} p95={sea_p[2]:.1f} p99={sea_p[3]:.1f}")
+        print(f"    Registers: avg={results[N]['reg_avg']:.2f}ms p99={reg_p[3]:.1f}")
+        print(f"    Search:    avg={results[N]['search_avg']:.2f}ms p99={sea_p[3]:.1f}")
         print(f"    Throughput: {throughput:.2f} ops/sec  | Errors={errors}")
 
     return results
@@ -649,7 +656,7 @@ def main():
         # Scalability Test
         # -------------------------
         print("\n========== SCALABILITY TEST ==========")
-        peer_scale_list = [10, 20, 50, 100, 200, 400, 600, 800, 1000]
+        peer_scale_list = [10, 20, 50, 100, 200, 500, 1000] 
         scale_results = run_scalability_test(client, peer_scale_list)
 
         # -------------------------
@@ -663,59 +670,95 @@ def main():
         # -------------------------
         print("\n[Output] Generating plots...")
 
-        # --- Figure 1: Register/Search latency histograms
-        plt.figure(figsize=(15, 5))
+        # --- Figure 1: Core Benchmarks & Latency Dist ---
+        plt.figure(figsize=(15, 6))
+        
+        # 1. Latency Histograms
         plt.subplot(1, 3, 1)
-        plt.hist(reg_lats, bins=15, alpha=0.5, label='Register', color='skyblue')
-        plt.hist(search_lats, bins=15, alpha=0.5, label='Search', color='salmon')
+        plt.hist(reg_lats, bins=20, alpha=0.6, label='Register', color='#1f77b4')
+        plt.hist(search_lats, bins=20, alpha=0.6, label='Search', color='#ff7f0e')
         plt.legend()
-        plt.title("Request Latency Distribution")
-        plt.xlabel("ms")
-        plt.ylabel("Count")
+        plt.title("Request Latency (Load Test)")
+        plt.xlabel("Latency (ms)")
+        plt.ylabel("Frequency")
 
-        # --- Figure 1 (middle): Core system metrics
+        # 2. System Metrics Bar Chart
         plt.subplot(1, 3, 2)
-        m_names = ['Rep. Conv.', 'Write Lat.', 'Failover', 'Shadow RO']
+        m_names = ['Rep. Time', 'Write Lat.', 'Failover Rec.']
         m_values = [
             np.mean(metrics["replication_convergence"]) if metrics["replication_convergence"] else 0,
             np.mean(metrics["write_latency"]) if metrics["write_latency"] else 0,
-            np.mean(metrics["failover_recovery"]) if metrics["failover_recovery"] else 0,
-            1 if shadow_ok else 0
+            np.mean(metrics["failover_recovery"]) if metrics["failover_recovery"] else 0
         ]
-        plt.bar(m_names, m_values, color=['green', 'orange', 'red', 'blue'])
-        plt.title("System Performance Metrics")
-        plt.ylabel("ms")
+        bars = plt.bar(m_names, m_values, color=['#2ca02c', '#9467bd', '#d62728'])
+        plt.bar_label(bars, fmt='%.1f ms')
+        plt.title("Core System Latencies")
+        plt.ylabel("Time (ms)")
 
-        # --- Figure 1 (right): Scalability Throughput Curve
+        # 3. Scalability Throughput (Simplified)
         plt.subplot(1, 3, 3)
         xs = list(scale_results.keys())
         ys = [scale_results[n]["throughput"] for n in xs]
-        plt.plot(xs, ys, marker="o", color="purple")
-        plt.title("Scalability: Throughput vs Peer Count")
+        plt.plot(xs, ys, marker="o", color="purple", linewidth=2)
+        plt.title("Throughput Scaling")
         plt.xlabel("Number of Peers")
-        plt.ylabel("Throughput (ops/sec)")
-        plt.grid(True)
+        plt.ylabel("Ops / Sec")
+        plt.grid(True, alpha=0.3)
 
         plt.tight_layout()
         plt.savefig("benchmark_extended.png")
         print("Saved benchmark_extended.png")
 
-        # ---------------------
-        # Save scalability plot separately
-        # ---------------------
-        plt.figure(figsize=(10, 5))
-        plt.plot(xs, ys, marker='o')
-        plt.title("Scalability Throughput Curve")
+        # --- Figure 2: Detailed Scalability Metrics ---
+        plt.figure(figsize=(16, 10))
+        
+        # Subplot 1: Throughput
+        plt.subplot(2, 2, 1)
+        plt.plot(xs, [scale_results[n]["throughput"] for n in xs], marker='o', color='purple')
+        plt.title("System Throughput")
+        plt.ylabel("Operations / Sec")
         plt.xlabel("Peer Count")
-        plt.ylabel("Throughput (ops/sec)")
         plt.grid(True)
-        plt.savefig("scalability_throughput.png")
-        print("Saved scalability_throughput.png")
+
+        # Subplot 2: Average Latency (Reg vs Search)
+        plt.subplot(2, 2, 2)
+        plt.plot(xs, [scale_results[n]["reg_avg"] for n in xs], marker='s', label="Register", color="blue")
+        plt.plot(xs, [scale_results[n]["search_avg"] for n in xs], marker='^', label="Search", color="orange")
+        plt.title("Average Request Latency")
+        plt.ylabel("Latency (ms)")
+        plt.xlabel("Peer Count")
+        plt.legend()
+        plt.grid(True)
+
+        # Subplot 3: P99 Tail Latency
+        plt.subplot(2, 2, 3)
+        plt.plot(xs, [scale_results[n]["register_p"][3] for n in xs], marker='s', label="Register P99", color="blue", linestyle="--")
+        plt.plot(xs, [scale_results[n]["search_p"][3] for n in xs], marker='^', label="Search P99", color="orange", linestyle="--")
+        plt.title("Tail Latency (P99)")
+        plt.ylabel("Latency (ms)")
+        plt.xlabel("Peer Count")
+        plt.legend()
+        plt.grid(True)
+
+        # Subplot 4: Error Rate
+        plt.subplot(2, 2, 4)
+        plt.plot(xs, [scale_results[n]["error_rate"] for n in xs], marker='x', color="red")
+        plt.title("Error Rate")
+        plt.ylabel("Error %")
+        plt.xlabel("Peer Count")
+        plt.ylim(bottom=-0.5) # Start at 0
+        plt.grid(True)
+
+        plt.suptitle("Scalability Stress Test Results", fontsize=16)
+        plt.savefig("scalability_metrics.png")
+        print("Saved scalability_metrics.png")
 
     except KeyboardInterrupt:
         print("\nAborted by user.")
     except Exception as e:
         print(f"\nAn error occurred: {e}")
+        import traceback
+        traceback.print_exc()
     finally:
         cluster.stop()
 

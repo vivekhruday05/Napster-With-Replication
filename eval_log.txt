@@ -1,0 +1,90 @@
+[System] Starting Shadow Server (8081)...
+[System] Starting Primary Server (8080)...
+[System] Waiting 16s for Primary grace period...
+[System] Cluster Ready.
+
+========== CORE TESTS ==========
+
+[Test] Replication Convergence...
+  PASS: File replicated to ['peer_rep_1', 'peer_rep_2']. Time: 14.53 ms
+
+[Test] Versioning & Consistency...
+  PASS: P1 updated to v2. Write Latency: 8.80 ms
+  PASS: P2 prevented from unauthorized write (403 Forbidden).
+
+[Test] Server Failover...
+[System] CRASHING PRIMARY SERVER
+  PASS: Recovered in 9.59 ms (switched to Shadow).
+[System] Restarting Primary Server (Wait 16s)...
+
+[Test] Shadow Read-Only Policy...
+  PASS: /register rejected with 403
+  PASS: /announce rejected with 403
+  PASS: /lease rejected with 403
+  PASS: /heartbeat rejected with 403
+
+[Test] Failover with Shadow Read-Only...
+[System] CRASHING PRIMARY SERVER
+  PASS: Shadow /register -> 403
+  PASS: Shadow /announce -> 403
+  PASS: Shadow /lease -> 403
+  PASS: Shadow /heartbeat -> 403
+[System] Restarting Primary Server (Wait 16s)...
+  PASS: Primary accepts writes after restart.
+
+========== LOAD TEST ==========
+
+[Load Test] Registering 50 peers, 100 searches...
+  Avg Register Latency: 18.39 ms
+  Avg Search Latency: 28.94 ms
+
+========== SCALABILITY TEST ==========
+
+[Scalability Test] Starting...
+
+  [Test] 10 peers
+    Registers: avg=6.31ms p99=8.6
+    Search:    avg=1.72ms p99=3.5
+    Throughput: 233.86 ops/sec  | Errors=0
+
+  [Test] 20 peers
+    Registers: avg=10.76ms p99=19.9
+    Search:    avg=1.48ms p99=3.9
+    Throughput: 142.58 ops/sec  | Errors=0
+
+  [Test] 50 peers
+    Registers: avg=42.80ms p99=75.3
+    Search:    avg=2.35ms p99=3.9
+    Throughput: 45.67 ops/sec  | Errors=0
+
+  [Test] 100 peers
+    Registers: avg=156.46ms p99=212.4
+    Search:    avg=3.87ms p99=8.3
+    Throughput: 12.74 ops/sec  | Errors=0
+
+  [Test] 200 peers
+    Registers: avg=89.23ms p99=155.4
+    Search:    avg=3.29ms p99=8.1
+    Throughput: 8.35 ops/sec  | Errors=52
+
+  [Test] 500 peers
+    Registers: avg=135.37ms p99=168.7
+    Search:    avg=3.88ms p99=7.1
+    Throughput: 8.05 ops/sec  | Errors=0
+
+  [Test] 1000 peers
+    Registers: avg=133.52ms p99=173.6
+    Search:    avg=3.62ms p99=6.0
+    Throughput: 7.61 ops/sec  | Errors=0
+
+========== CLIENT FAILURE (PRUNING) ==========
+
+[Test] Client Failure (Pruning)...
+  Waiting 50s for TTL expiry (this will take a minute)...
+  FAIL: Peer peer_fail_1 still exists after TTL.
+
+[Output] Generating plots...
+Saved benchmark_extended.png
+Saved scalability_metrics.png
+
+[System] Shutting down servers...
