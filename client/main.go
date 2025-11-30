@@ -15,7 +15,7 @@ func main() {
 	sharedDir := flag.String("dir", "shared", "folder to share files from")
 	bindAddr := flag.String("bind", ":9000", "address to bind the peer server to")
 	peerAddr := flag.String("addr", "", "public address of this peer (e.g. http://1.2.3.4:9000)")
-	cmd := flag.String("cmd", "serve", "serve, search, get, update, or list")
+	cmd := flag.String("cmd", "serve", "serve, search, get, update, delete, or list")
 	flag.Parse()
 
 	// User mistake recovery: if running 'serve' and forgot -server but supplied addresses as positional arg.
@@ -82,6 +82,14 @@ func main() {
 			log.Fatal("update requires a filename")
 		}
 		if err := c.UpdateFile(name); err != nil {
+			log.Fatal(err)
+		}
+	case "delete":
+		name := flag.Arg(0)
+		if name == "" {
+			log.Fatal("delete requires a filename")
+		}
+		if err := c.DeleteFile(name); err != nil {
 			log.Fatal(err)
 		}
 	case "list":

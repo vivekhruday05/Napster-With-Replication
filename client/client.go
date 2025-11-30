@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -160,9 +163,13 @@ func (c *Client) scanFiles() ([]shared.FileInfo, error) {
 		if err != nil {
 			continue
 		}
-		// For the project, simple scan.
-		// Note: Versions are managed via 'update' command mostly.
-		files = append(files, shared.FileInfo{Name: name, Size: fi.Size()})
+		// Compute hash for integrity checks
+		h, err := c.fileHash(filepath.Join(c.SharedDir, name))
+		if err != nil {
+			log.Printf("[client] hash compute failed for %s: %v", name, err)
+			continue
+		}
+		files = append(files, shared.FileInfo{Name: name, Size: fi.Size(), Hash: h})
 	}
 	sort.Slice(files, func(i, j int) bool { return files[i].Name < files[j].Name })
 	return files, nil
@@ -210,7 +217,7 @@ func (c *Client) processTasks(tasks []shared.ReplicationTask) {
 		// NEW: Run in background so we don't block the heartbeat loop
 		go func(task shared.ReplicationTask) {
 			log.Printf("[client] replication: pulling file=%s from=%s", task.File.Name, task.SourcePeer.Addr)
-			if err := c.pullFile(task.SourcePeer.Addr, task.File.Name); err != nil {
+			if err := c.pullFile(task.SourcePeer.Addr, task.File.Name, task.File.Hash); err != nil {
 				log.Printf("[client] replication failed file=%s err=%v", task.File.Name, err)
 				return
 			}
@@ -242,22 +249,37 @@ func (c *Client) UpdateFile(filename string) error {
 	}
 	log.Printf("[client] update: lease acquired exp=%s", leaseResp.Expiration.Format(time.RFC3339))
 
-	// 2. Simulate "Edit" by just reading current stats and incrementing version
+	// 2. Open file in default editor for content update
 	path := filepath.Join(c.SharedDir, filename)
-	fi, err := os.Stat(path)
-	if err != nil {
+	if _, err := os.Stat(path); err != nil {
 		return fmt.Errorf("file not found locally: %v", err)
 	}
-
-	// In a real app, you'd fetch the current version from server first.
-	// Here we just use a timestamp based version for monotonicity
-	newVersion := time.Now().UTC().UnixNano()
-
-	updatedInfo := shared.FileInfo{
-		Name:    filename,
-		Size:    fi.Size(),
-		Version: newVersion,
+	editor := os.Getenv("VISUAL")
+	if editor == "" {
+		editor = os.Getenv("EDITOR")
 	}
+	if editor == "" {
+		editor = "vi" // fallback
+	}
+	cmd := exec.Command(editor, path)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("editor failed: %v", err)
+	}
+
+	// 3. Recompute size and hash, set new version
+	fi, err := os.Stat(path)
+	if err != nil {
+		return fmt.Errorf("stat after edit failed: %v", err)
+	}
+	h, err := c.fileHash(path)
+	if err != nil {
+		return fmt.Errorf("hash after edit failed: %v", err)
+	}
+	newVersion := time.Now().UTC().UnixNano()
+	updatedInfo := shared.FileInfo{Name: filename, Size: fi.Size(), Hash: h, Version: newVersion}
 
 	// 3. Announce Update
 	req := shared.AnnounceRequest{
@@ -340,7 +362,7 @@ func (c *Client) Get(name string) error {
 	}
 	// Pick first peer
 	src := match.Peers[0]
-	if err := c.pullFile(src.Addr, name); err != nil {
+	if err := c.pullFile(src.Addr, name, match.File.Hash); err != nil {
 		return err
 	}
 	// Announce ownership
@@ -353,7 +375,7 @@ func (c *Client) Get(name string) error {
 	return nil
 }
 
-func (c *Client) pullFile(peerBase, name string) error {
+func (c *Client) pullFile(peerBase, name, expectedHash string) error {
 	u := strings.TrimRight(peerBase, "/") + "/files/" + url.PathEscape(name)
 
 	// NEW: Use a client with timeout
@@ -368,17 +390,33 @@ func (c *Client) pullFile(peerBase, name string) error {
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("download failed: %s", resp.Status)
 	}
-	path := filepath.Join(c.SharedDir, filepath.Clean(name))
-	f, err := os.Create(path)
+	// Write to temp file while hashing
+	finalPath := filepath.Join(c.SharedDir, filepath.Clean(name))
+	tmpPath := finalPath + ".part"
+	f, err := os.Create(tmpPath)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-	_, err = io.Copy(f, resp.Body)
-	if err == nil {
-		log.Printf("[client] download: saved file=%s to=%s", name, path)
+	hasher := sha256.New()
+	tr := io.TeeReader(resp.Body, hasher)
+	if _, err := io.Copy(f, tr); err != nil {
+		return err
 	}
-	return err
+	gotHash := hex.EncodeToString(hasher.Sum(nil))
+
+	// Verify hash if provided
+	if expectedHash != "" && !strings.EqualFold(expectedHash, gotHash) {
+		f.Close()
+		os.Remove(tmpPath)
+		return fmt.Errorf("hash mismatch for %s: expected %s got %s", name, expectedHash, gotHash)
+	}
+	// Move temp to final
+	if err := os.Rename(tmpPath, finalPath); err != nil {
+		return err
+	}
+	log.Printf("[client] download: saved file=%s to=%s (hash=%s)", name, finalPath, gotHash)
+	return nil
 }
 
 func (c *Client) ListLocal() error {
@@ -387,7 +425,58 @@ func (c *Client) ListLocal() error {
 		return err
 	}
 	for _, f := range files {
-		log.Printf("[client] local: %s (%d bytes)", f.Name, f.Size)
+		log.Printf("[client] local: %s (%d bytes) hash=%s", f.Name, f.Size, f.Hash)
 	}
 	return nil
+}
+
+// DeleteFile removes local file (if owned) and informs server to drop this peer as a host.
+func (c *Client) DeleteFile(filename string) error {
+	// Verify ownership from server
+	var match shared.SearchMatch
+	path := "/peers?file=" + url.QueryEscape(filename)
+	if err := c.doRequest("GET", path, nil, &match); err != nil {
+		return err
+	}
+	myID := c.peerIDFromAddr()
+	owned := false
+	for _, p := range match.Peers {
+		if p.ID == myID {
+			owned = true
+			break
+		}
+	}
+	if !owned {
+		return fmt.Errorf("delete denied: this peer does not own file %s", filename)
+	}
+	// Delete local file
+	local := filepath.Join(c.SharedDir, filename)
+	if err := os.Remove(local); err != nil {
+		if !os.IsNotExist(err) {
+			return fmt.Errorf("failed to delete local file: %v", err)
+		}
+		// If not exists, continue to inform server anyway
+		log.Printf("[client] delete: local file not found, continuing: %s", local)
+	}
+	// Notify server
+	req := shared.DeleteRequest{PeerID: myID, FileName: filename}
+	if err := c.doRequest("POST", "/delete", req, nil); err != nil {
+		return err
+	}
+	log.Printf("[client] delete: removed file=%s and notified server", filename)
+	return nil
+}
+
+// fileHash returns sha256 hex of the file contents
+func (c *Client) fileHash(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
 }

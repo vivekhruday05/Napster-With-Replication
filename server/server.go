@@ -116,6 +116,7 @@ func registerRoutes(mux *http.ServeMux, srv *Server) {
 	// NEW ROUTES
 	mux.HandleFunc("/lease", srv.handleLease)
 	mux.HandleFunc("/sync", srv.handleSync)
+	mux.HandleFunc("/delete", srv.handleDelete)
 
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200); w.Write([]byte("ok")) })
 }
@@ -202,6 +203,21 @@ func (s *Server) handleSync(w http.ResponseWriter, r *http.Request) {
 			if p, ok := s.peers[req.PeerID]; ok {
 				p.LastSeen = time.Now().UTC()
 				s.peers[req.PeerID] = p
+			}
+		}
+	case "delete":
+		log.Printf("[shadow] apply delete")
+		var req shared.DeleteRequest
+		if err := json.Unmarshal(op.Data, &req); err == nil {
+			// Remove the peer from the file entry
+			if fe, ok := s.files[req.FileName]; ok {
+				delete(fe.Peers, req.PeerID)
+				if len(fe.Peers) == 0 {
+					delete(s.files, req.FileName)
+				}
+			}
+			if pf, ok := s.peerFiles[req.PeerID]; ok {
+				delete(pf, req.FileName)
 			}
 		}
 	}
@@ -539,4 +555,69 @@ func (s *Server) planReplicationLocked() {
 			log.Printf("[replication] enqueue peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
 		}
 	}
+}
+
+// handleDelete removes a peer's ownership of a file and triggers replication planning.
+func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	// Enforce read-only on shadow
+	if s.ShadowAddr == "" {
+		http.Error(w, "shadow is read-only", http.StatusForbidden)
+		log.Printf("[delete] rejected on shadow: read-only")
+		return
+	}
+	log.Printf("[delete] from=%s", r.RemoteAddr)
+	var req shared.DeleteRequest
+	if !decodeJSON(w, r, &req) {
+		log.Printf("[delete] bad json")
+		return
+	}
+
+	// Sync to shadow
+	go s.syncToShadow("delete", req)
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	fe, ok := s.files[req.FileName]
+	if !ok {
+		http.Error(w, "file not found", http.StatusNotFound)
+		log.Printf("[delete] not found file=%s", req.FileName)
+		return
+	}
+	if _, owns := fe.Peers[req.PeerID]; !owns {
+		http.Error(w, "peer does not own this file", http.StatusForbidden)
+		log.Printf("[delete] forbidden: peer=%s not owner of file=%s", req.PeerID, req.FileName)
+		return
+	}
+
+	// Remove mapping
+	delete(fe.Peers, req.PeerID)
+	if pf, ok := s.peerFiles[req.PeerID]; ok {
+		delete(pf, req.FileName)
+	}
+	if len(fe.Peers) == 0 {
+		delete(s.files, req.FileName)
+	}
+
+	// Re-plan replication
+	s.planReplicationLocked()
+
+	// Do not reassign this file back to the deleting peer; remove such tasks if any
+	tq := s.queue[req.PeerID]
+	if len(tq) > 0 {
+		filtered := tq[:0]
+		for _, t := range tq {
+			if t.File.Name != req.FileName {
+				filtered = append(filtered, t)
+			}
+		}
+		s.queue[req.PeerID] = filtered
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+	log.Printf("[delete] ok peer=%s file=%s", req.PeerID, req.FileName)
 }

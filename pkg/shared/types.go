@@ -80,3 +80,15 @@ type AnnounceRequest struct {
 	Peer Peer     `json:"peer"`
 	File FileInfo `json:"file"`
 }
+
+// DeleteRequest is sent by a peer to indicate it is deleting a local file and
+// should be removed as a host for that file on the server. The server will
+// update its index and plan replication tasks if needed.
+type DeleteRequest struct {
+	PeerID   string `json:"peerId"`
+	FileName string `json:"fileName"`
+}
+
+type DeleteResponse struct {
+	OK bool `json:"ok"`
+}

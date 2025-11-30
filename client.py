@@ -8,6 +8,9 @@ import os
 import socket
 import sys
 import requests
+import hashlib
+import shlex
+import subprocess
 from urllib.parse import urlparse, quote
 
 # --- Configuration & Globals ---
@@ -70,11 +73,11 @@ def scan_files():
         path = os.path.join(SHARED_DIR, entry)
         if os.path.isfile(path):
             stat = os.stat(path)
-            # Basic info. In a real app, you'd read a metadata file for 'version'
+            h = compute_hash(path)
             files.append({
                 "name": entry,
                 "size": stat.st_size,
-                "hash": "",
+                "hash": h,
                 "version": int(stat.st_mtime * 1000) # Use mtime as version proxy
             })
     return files
@@ -153,7 +156,7 @@ def process_tasks(tasks):
         print(f"\n[replication] Pulling {file_info['name']} from {source_peer['addr']}...")
         
         try:
-            download_file_from_peer(source_peer['addr'], file_info['name'])
+            download_file_from_peer(source_peer['addr'], file_info['name'], expected_hash=file_info.get('hash', ''))
             # Announce that we now have it
             announce(file_info)
         except Exception as e:
@@ -166,17 +169,28 @@ def announce(file_info):
     }
     do_request("POST", "/announce", payload)
 
-def download_file_from_peer(peer_addr, filename):
+def download_file_from_peer(peer_addr, filename, expected_hash=None):
     url = f"{peer_addr}/files/{quote(filename)}"
     resp = requests.get(url, stream=True, timeout=10)
     if resp.status_code != 200:
         raise Exception(f"Peer returned {resp.status_code}")
     
-    dest_path = os.path.join(SHARED_DIR, filename)
-    with open(dest_path, 'wb') as f:
+    final_path = os.path.join(SHARED_DIR, filename)
+    tmp_path = final_path + ".part"
+    hasher = hashlib.sha256()
+    with open(tmp_path, 'wb') as f:
         for chunk in resp.iter_content(chunk_size=8192):
+            if not chunk:
+                continue
+            hasher.update(chunk)
             f.write(chunk)
-    print(f"[client] Downloaded: {filename}")
+    got_hash = hasher.hexdigest()
+    if expected_hash and expected_hash.lower() != got_hash.lower():
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise Exception(f"Hash mismatch for {filename}: expected {expected_hash} got {got_hash}")
+    os.replace(tmp_path, final_path)
+    print(f"[client] Downloaded: {filename} (hash={got_hash})")
 
 # --- CLI Commands ---
 
@@ -215,8 +229,8 @@ def cmd_get(filename):
         # 2. Pick first peer
         target = peers[0]
         print(f"Downloading from {target['addr']}...")
-        
-        download_file_from_peer(target['addr'], filename)
+        expected_hash = data.get('file', {}).get('hash', '')
+        download_file_from_peer(target['addr'], filename, expected_hash=expected_hash)
         
         # 3. Announce ownership
         announce(data['file'])
@@ -243,21 +257,25 @@ def cmd_update(filename):
             
         print(f"Lease acquired! Valid until {lease_data.get('expiration')}")
         
-        # 2. Simulate "Edit" (Update local timestamp/content)
+        # 2. Open in editor for content update
         fpath = os.path.join(SHARED_DIR, filename)
         if not os.path.exists(fpath):
             print("File does not exist locally to update.")
             return
-            
-        # Update mtime to simulate edit
-        os.utime(fpath, None)
+        editor = os.environ.get("VISUAL") or os.environ.get("EDITOR") or "vi"
+        try:
+            cmd = shlex.split(editor) + [fpath]
+            subprocess.run(cmd, check=True)
+        except Exception as e:
+            print(f"Editor failed: {e}")
+            return
+
+        # 3. Recompute version/size/hash and announce
         new_version = int(time.time() * 1000)
-        
-        # 3. Announce Update
         updated_info = {
             "name": filename,
             "size": os.path.getsize(fpath),
-            "hash": "",
+            "hash": compute_hash(fpath),
             "version": new_version
         }
         announce(updated_info)
@@ -265,6 +283,44 @@ def cmd_update(filename):
 
     except Exception as e:
         print(f"Update failed: {e}")
+
+def cmd_delete(filename):
+    try:
+        # Verify ownership via /peers
+        resp = do_request("GET", f"/peers?file={quote(filename)}")
+        if resp.status_code != 200:
+            print("File not found on server index.")
+            return
+        data = resp.json()
+        peers = data.get("peers", [])
+        owns = any(p.get("id") == PEER_ID for p in peers)
+        if not owns:
+            print("Delete denied: this peer does not own the file.")
+            return
+        # Remove local file
+        fpath = os.path.join(SHARED_DIR, filename)
+        try:
+            os.remove(fpath)
+        except FileNotFoundError:
+            pass
+        # Notify server
+        resp = do_request("POST", "/delete", {"peerId": PEER_ID, "fileName": filename})
+        if resp.status_code not in (200, 204):
+            print(f"Server delete failed: {resp.status_code} {resp.text}")
+            return
+        print(f"Deleted '{filename}' and notified server.")
+    except Exception as e:
+        print(f"Delete failed: {e}")
+
+def compute_hash(path):
+    h = hashlib.sha256()
+    try:
+        with open(path, 'rb') as f:
+            for chunk in iter(lambda: f.read(8192), b''):
+                h.update(chunk)
+        return h.hexdigest()
+    except FileNotFoundError:
+        return ""
 
 def cmd_list():
     files = scan_files()
@@ -336,7 +392,7 @@ def main():
     t_hb.start()
 
     # 4. Interactive CLI Loop
-    print("\nCommands: search <q>, get <file>, update <file>, list, exit")
+    print("\nCommands: search <q>, get <file>, update <file>, delete <file>, list, exit")
     try:
         while True:
             line = input("> ").strip()
@@ -358,11 +414,14 @@ def main():
                 cmd_update(args[0])
             elif cmd == "list":
                 cmd_list()
+            elif cmd == "delete":
+                if not args: print("Usage: delete <filename>"); continue
+                cmd_delete(args[0])
             elif cmd in ["exit", "quit"]:
                 print("Exiting...")
                 sys.exit(0)
             else:
-                print("Unknown command. Try: search, get, update, list, exit")
+                print("Unknown command. Try: search, get, update, delete, list, exit")
     except KeyboardInterrupt:
         print("\nExiting...")
         sys.exit(0)
