@@ -45,7 +45,7 @@ func (c *Client) peerIDFromAddr() string {
 // doRequest iterates through the server list until one succeeds
 func (c *Client) doRequest(method, path string, body any, out any) error {
 	var lastErr error
-	for _, base := range c.Servers {
+	for i, base := range c.Servers {
 		start := time.Now()
 		var reqBody io.Reader
 		if body != nil {
@@ -81,6 +81,12 @@ func (c *Client) doRequest(method, path string, body any, out any) error {
 		if resp.StatusCode >= 500 {
 			log.Printf("[client] request %s %s base=%s status=%s -> will try next", method, path, base, resp.Status)
 			lastErr = fmt.Errorf("%s returned server error %s", base, resp.Status)
+			continue
+		}
+		// WRITE SAFETY: For write methods ensure we only talk to primary (first server) if others might be shadows
+		if (method == http.MethodPost || method == http.MethodPut || method == http.MethodDelete) && i > 0 && path != "/search" && path != "/peers" && path != "/healthz" {
+			// Skip writes to non-primary entries silently
+			log.Printf("[client] skip write to non-primary base=%s path=%s", base, path)
 			continue
 		}
 

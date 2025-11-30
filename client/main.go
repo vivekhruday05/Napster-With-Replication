@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net"
+	"os"
 	"strings"
 
 	shared "github.com/vivekhruday05/Napster-With-Replication/pkg/shared"
@@ -15,6 +17,7 @@ func main() {
 	sharedDir := flag.String("dir", "shared", "folder to share files from")
 	bindAddr := flag.String("bind", ":9000", "address to bind the peer server to")
 	peerAddr := flag.String("addr", "", "public address of this peer (e.g. http://1.2.3.4:9000)")
+	logDir := flag.String("logdir", "logs", "directory to write peer log file")
 	cmd := flag.String("cmd", "serve", "serve, search, get, update, delete, or list")
 	flag.Parse()
 
@@ -53,6 +56,20 @@ func main() {
 		BindAddr:  *bindAddr,
 		PeerAddr:  *peerAddr,
 	}
+
+	// Setup logging to file + stdout
+	if err := os.MkdirAll(*logDir, 0o755); err != nil {
+		log.Fatalf("failed creating log dir: %v", err)
+	}
+	peerID := c.peerIDFromAddr()
+	logPath := fmt.Sprintf("%s/client-%s.log", *logDir, peerID)
+	f, err := os.OpenFile(logPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
+	if err != nil {
+		log.Fatalf("failed opening log file: %v", err)
+	}
+	// MultiWriter to keep CLI output while persisting logs
+	log.SetOutput(io.MultiWriter(os.Stdout, f))
+	log.Printf("[init] logging to %s", logPath)
 	if err := c.EnsureDir(); err != nil {
 		log.Fatal(err)
 	}

@@ -32,7 +32,9 @@ type Server struct {
 	mu                sync.Mutex
 	replicationFactor int
 	peerTTL           time.Duration
-	ShadowAddr        string // NEW: Address of the shadow master (e.g., "http://localhost:8081")
+	ShadowAddr        string        // NEW: Address of the shadow master (e.g., "http://localhost:8081")
+	startTime         time.Time     // NEW: Server start time for grace window after restart
+	initGracePeriod   time.Duration // NEW: Duration to suppress replication tasks on cold start
 
 	peers map[string]shared.Peer
 	// peerFiles maps peerID -> filename -> version hosted by that peer
@@ -59,6 +61,8 @@ func NewServer() *Server {
 		replicationFactor: replica,
 		peerTTL:           45 * time.Second,
 		ShadowAddr:        shadow,
+		startTime:         time.Now().UTC(),
+		initGracePeriod:   15 * time.Second,
 		peers:             make(map[string]shared.Peer),
 		peerFiles:         make(map[string]map[string]int64),
 		files:             make(map[string]*fileEntry),
@@ -358,6 +362,18 @@ func (s *Server) handleRegister(w http.ResponseWriter, r *http.Request) {
 	s.applyRegister(req) // Use shared logic
 	s.planReplicationLocked()
 	tasks := s.queue[req.Peer.ID]
+	// PURGE: Remove tasks for files the peer already registered (avoid redundant pulls after restart)
+	if len(tasks) > 0 {
+		filtered := tasks[:0]
+		for _, t := range tasks {
+			if _, has := s.peerFiles[req.Peer.ID][t.File.Name]; !has {
+				filtered = append(filtered, t)
+			} else {
+				log.Printf("[register] purge redundant task file=%s peer=%s (already owns)", t.File.Name, req.Peer.ID)
+			}
+		}
+		tasks = filtered
+	}
 	s.queue[req.Peer.ID] = nil
 	s.mu.Unlock()
 
@@ -525,6 +541,11 @@ func (s *Server) handlePeers(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) planReplicationLocked() {
 	log.Printf("[replication] planning for %d files", len(s.files))
+	// Grace period: allow peers to re-register after restart before scheduling tasks
+	if time.Since(s.startTime) < s.initGracePeriod {
+		log.Printf("[replication] within init grace (%s remaining) -> skip planning", s.initGracePeriod-time.Since(s.startTime))
+		return
+	}
 	for _, fe := range s.files {
 		latest := fe.Info.Version
 		if len(fe.Peers) == 0 {

@@ -11,6 +11,7 @@ import requests
 import hashlib
 import shlex
 import subprocess
+import logging
 from urllib.parse import urlparse, quote
 
 # --- Configuration & Globals ---
@@ -373,12 +374,28 @@ def main():
     parsed = urlparse(PEER_ADDR)
     PEER_ID = "peer-" + parsed.netloc.replace(":", "-")
 
-    print(f"--- Python Napster Client ---")
-    print(f"ID: {PEER_ID}")
-    print(f"Dir: {SHARED_DIR}")
-    print(f"Addr: {PEER_ADDR}")
-    print(f"Servers: {SERVERS}")
-    print("-----------------------------")
+    # Logging setup per peer
+    log_dir = os.path.join(os.getcwd(), "logs")
+    os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, f"peer-{PEER_ID}.log")
+    logger = logging.getLogger("napster-peer")
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+    # File handler
+    fh = logging.FileHandler(log_path)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    # Console handler (still show minimal output)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info(f"--- Python Napster Client ---")
+    logger.info(f"ID: {PEER_ID}")
+    logger.info(f"Dir: {SHARED_DIR}")
+    logger.info(f"Addr: {PEER_ADDR}")
+    logger.info(f"Servers: {SERVERS}")
+    logger.info(f"Logs: {log_path}")
+    logger.info("-----------------------------")
 
     # 1. Start Peer Server in background thread
     t_server = threading.Thread(target=run_peer_server, daemon=True)
@@ -392,7 +409,7 @@ def main():
     t_hb.start()
 
     # 4. Interactive CLI Loop
-    print("\nCommands: search <q>, get <file>, update <file>, delete <file>, list, exit")
+    logger.info("Commands: search <q>, get <file>, update <file>, delete <file>, list, exit")
     try:
         while True:
             line = input("> ").strip()
@@ -404,26 +421,26 @@ def main():
             args = parts[1:]
 
             if cmd == "search":
-                if not args: print("Usage: search <query>"); continue
+                if not args: logger.info("Usage: search <query>"); continue
                 cmd_search(" ".join(args))
             elif cmd == "get":
-                if not args: print("Usage: get <filename>"); continue
+                if not args: logger.info("Usage: get <filename>"); continue
                 cmd_get(args[0])
             elif cmd == "update":
-                if not args: print("Usage: update <filename>"); continue
+                if not args: logger.info("Usage: update <filename>"); continue
                 cmd_update(args[0])
             elif cmd == "list":
                 cmd_list()
             elif cmd == "delete":
-                if not args: print("Usage: delete <filename>"); continue
+                if not args: logger.info("Usage: delete <filename>"); continue
                 cmd_delete(args[0])
             elif cmd in ["exit", "quit"]:
-                print("Exiting...")
+                logger.info("Exiting...")
                 sys.exit(0)
             else:
-                print("Unknown command. Try: search, get, update, delete, list, exit")
+                logger.info("Unknown command. Try: search, get, update, delete, list, exit")
     except KeyboardInterrupt:
-        print("\nExiting...")
+        logger.info("Exiting...")
         sys.exit(0)
 
 if __name__ == "__main__":
