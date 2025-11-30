@@ -298,18 +298,19 @@ def cmd_delete(filename):
         if not owns:
             print("Delete denied: this peer does not own the file.")
             return
-        # Remove local file
+        # 1. Notify server FIRST to remove us from index (safer on failure)
+        resp = do_request("POST", "/delete", {"peerId": PEER_ID, "fileName": filename})
+        if resp.status_code not in (200, 204):
+            print(f"Server delete failed: {resp.status_code} {resp.text}")
+            print("Local file retained.")
+            return
+        # 2. Remove local file only after successful server acknowledgement
         fpath = os.path.join(SHARED_DIR, filename)
         try:
             os.remove(fpath)
         except FileNotFoundError:
             pass
-        # Notify server
-        resp = do_request("POST", "/delete", {"peerId": PEER_ID, "fileName": filename})
-        if resp.status_code not in (200, 204):
-            print(f"Server delete failed: {resp.status_code} {resp.text}")
-            return
-        print(f"Deleted '{filename}' and notified server.")
+        print(f"Deleted '{filename}' locally after server acknowledgement.")
     except Exception as e:
         print(f"Delete failed: {e}")
 

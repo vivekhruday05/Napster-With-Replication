@@ -546,15 +546,29 @@ func (s *Server) planReplicationLocked() {
 		log.Printf("[replication] within init grace (%s remaining) -> skip planning", s.initGracePeriod-time.Since(s.startTime))
 		return
 	}
+
+	// Pre-compute pending add counts per file (tasks targeting peers that do not yet own the file)
+	pendingAdds := make(map[string][]string) // fileName -> []peerID
+	for peerID, tasks := range s.queue {
+		for _, t := range tasks {
+			fe := s.files[t.File.Name]
+			if fe == nil {
+				continue
+			}
+			if _, owns := fe.Peers[peerID]; !owns { // peer does not currently own file => it's an ADD
+				pendingAdds[t.File.Name] = append(pendingAdds[t.File.Name], peerID)
+			}
+		}
+	}
+
 	for _, fe := range s.files {
 		latest := fe.Info.Version
 		if len(fe.Peers) == 0 {
-			// No source available
 			log.Printf("[replication] skip file=%s (no peers)", fe.Info.Name)
 			continue
 		}
 
-		// Find peers that have latest version to use as source
+		// Determine source peers with latest version
 		var latestSources []shared.Peer
 		for pid := range fe.Peers {
 			if vmap, ok := s.peerFiles[pid]; ok {
@@ -564,7 +578,7 @@ func (s *Server) planReplicationLocked() {
 			}
 		}
 		if len(latestSources) == 0 {
-			// Fallback to any host if we don't have version info
+			// Fallback to any host
 			var hostIDs []string
 			for id := range fe.Peers {
 				hostIDs = append(hostIDs, id)
@@ -574,43 +588,91 @@ func (s *Server) planReplicationLocked() {
 		}
 		src := latestSources[0]
 
-		// Determine targets: missing peers and outdated peers
+		// Build add/update targets
 		var addTargets []shared.Peer
 		var updateTargets []shared.Peer
 		for id, p := range s.peers {
-			// Skip peers that already have latest
-			if vmap, ok := s.peerFiles[id]; ok {
-				v := vmap[fe.Info.Name]
-				if v == 0 {
-					// missing
-					if _, has := fe.Peers[id]; !has {
-						addTargets = append(addTargets, p)
+			if _, alreadyOwner := fe.Peers[id]; alreadyOwner {
+				// Owner: maybe outdated
+				if vmap, ok := s.peerFiles[id]; ok {
+					if v := vmap[fe.Info.Name]; v < latest {
+						updateTargets = append(updateTargets, p)
 					}
-				} else if v < latest {
-					updateTargets = append(updateTargets, p)
 				}
-			} else {
-				// No record for this peer => treat as missing
-				if _, has := fe.Peers[id]; !has {
-					addTargets = append(addTargets, p)
-				}
+				continue
 			}
+			// Not owner -> candidate for ADD if missing or version=0
+			addTargets = append(addTargets, p)
 		}
 		sort.Slice(addTargets, func(i, j int) bool { return addTargets[i].ID < addTargets[j].ID })
 		sort.Slice(updateTargets, func(i, j int) bool { return updateTargets[i].ID < updateTargets[j].ID })
 
-		// Respect replication factor for additions
-		neededAdds := s.replicationFactor - len(fe.Peers)
-		if neededAdds < 0 {
-			neededAdds = 0
+		// Effective owners includes queued pending adds (to prevent over-replication)
+		queued := pendingAdds[fe.Info.Name]
+		effectiveOwners := len(fe.Peers) + len(queued)
+		allowedAdds := s.replicationFactor - effectiveOwners
+		if allowedAdds < 0 {
+			// Need to trim queued adds (over-scheduled). Keep earliest deterministic subset.
+			over := -allowedAdds
+			if over > 0 && len(queued) > 0 {
+				// Sort queued peer IDs for determinism
+				sort.Strings(queued)
+				keep := queued[:len(queued)-over]
+				keepSet := make(map[string]struct{}, len(keep))
+				for _, id := range keep {
+					keepSet[id] = struct{}{}
+				}
+				// Filter queue for this file removing excess tasks
+				for peerID, tasks := range s.queue {
+					filtered := tasks[:0]
+					for _, t := range tasks {
+						if t.File.Name == fe.Info.Name {
+							if _, owns := fe.Peers[peerID]; !owns { // add task candidate
+								if _, ok := keepSet[peerID]; !ok {
+									log.Printf("[replication] trim queued ADD peer=%s file=%s (over replication)", peerID, fe.Info.Name)
+									continue // drop excess
+								}
+							}
+						}
+						filtered = append(filtered, t)
+					}
+					s.queue[peerID] = filtered
+				}
+			}
+			// No new adds scheduled in over-replication scenario
+			allowedAdds = 0
 		}
-		for i := 0; i < neededAdds && i < len(addTargets); i++ {
+
+		// Schedule new adds within remaining allowance
+		for i := 0; i < allowedAdds && i < len(addTargets); i++ {
 			peer := addTargets[i]
+			// Deduplicate: skip if task already queued for this peer/file
+			duplicate := false
+			for _, existing := range s.queue[peer.ID] {
+				if existing.File.Name == fe.Info.Name {
+					duplicate = true
+					break
+				}
+			}
+			if duplicate {
+				continue
+			}
 			s.queue[peer.ID] = append(s.queue[peer.ID], shared.ReplicationTask{File: fe.Info, SourcePeer: src})
 			log.Printf("[replication] enqueue ADD peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
 		}
-		// Enqueue updates for outdated peers (not capped by factor)
+
+		// Enqueue updates (deduplicate too)
 		for _, peer := range updateTargets {
+			dup := false
+			for _, existing := range s.queue[peer.ID] {
+				if existing.File.Name == fe.Info.Name {
+					dup = true
+					break
+				}
+			}
+			if dup {
+				continue
+			}
 			s.queue[peer.ID] = append(s.queue[peer.ID], shared.ReplicationTask{File: fe.Info, SourcePeer: src})
 			log.Printf("[replication] enqueue UPDATE peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
 		}
