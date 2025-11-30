@@ -34,8 +34,9 @@ type Server struct {
 	peerTTL           time.Duration
 	ShadowAddr        string // NEW: Address of the shadow master (e.g., "http://localhost:8081")
 
-	peers     map[string]shared.Peer
-	peerFiles map[string]map[string]struct{}
+	peers map[string]shared.Peer
+	// peerFiles maps peerID -> filename -> version hosted by that peer
+	peerFiles map[string]map[string]int64
 	files     map[string]*fileEntry
 	queue     map[string][]shared.ReplicationTask
 }
@@ -59,7 +60,7 @@ func NewServer() *Server {
 		peerTTL:           45 * time.Second,
 		ShadowAddr:        shadow,
 		peers:             make(map[string]shared.Peer),
-		peerFiles:         make(map[string]map[string]struct{}),
+		peerFiles:         make(map[string]map[string]int64),
 		files:             make(map[string]*fileEntry),
 		queue:             make(map[string][]shared.ReplicationTask),
 	}
@@ -231,7 +232,7 @@ func (s *Server) applyRegister(req shared.RegisterRequest) {
 	p.LastSeen = time.Now().UTC()
 	s.peers[p.ID] = p
 	if _, ok := s.peerFiles[p.ID]; !ok {
-		s.peerFiles[p.ID] = make(map[string]struct{})
+		s.peerFiles[p.ID] = make(map[string]int64)
 	}
 	for _, f := range req.Files {
 		log.Printf("[register] file=%s size=%d version=%d host=%s", f.Name, f.Size, f.Version, p.ID)
@@ -245,7 +246,7 @@ func (s *Server) applyRegister(req shared.RegisterRequest) {
 			fe.Info = f
 		}
 		fe.Peers[p.ID] = p
-		s.peerFiles[p.ID][f.Name] = struct{}{}
+		s.peerFiles[p.ID][f.Name] = f.Version
 	}
 }
 
@@ -259,7 +260,7 @@ func (s *Server) applyAnnounce(req shared.AnnounceRequest) {
 	}
 	s.peers[p.ID] = p
 	if _, ok := s.peerFiles[p.ID]; !ok {
-		s.peerFiles[p.ID] = make(map[string]struct{})
+		s.peerFiles[p.ID] = make(map[string]int64)
 	}
 	fe := s.files[req.File.Name]
 	if fe == nil {
@@ -270,7 +271,7 @@ func (s *Server) applyAnnounce(req shared.AnnounceRequest) {
 		fe.Info = req.File
 	}
 	fe.Peers[p.ID] = p
-	s.peerFiles[p.ID][req.File.Name] = struct{}{}
+	s.peerFiles[p.ID][req.File.Name] = req.File.Version
 }
 
 // --- NEW: Lease Logic ---
@@ -407,7 +408,7 @@ func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 	}
 	s.peers[p.ID] = p
 	if _, ok := s.peerFiles[p.ID]; !ok {
-		s.peerFiles[p.ID] = make(map[string]struct{})
+		s.peerFiles[p.ID] = make(map[string]int64)
 	}
 	if fe == nil {
 		fe = &fileEntry{Info: req.File, Peers: make(map[string]shared.Peer)}
@@ -419,7 +420,7 @@ func (s *Server) handleAnnounce(w http.ResponseWriter, r *http.Request) {
 		fe.Info = req.File
 	}
 	fe.Peers[p.ID] = p
-	s.peerFiles[p.ID][req.File.Name] = struct{}{}
+	s.peerFiles[p.ID][req.File.Name] = req.File.Version
 
 	s.planReplicationLocked()
 	w.WriteHeader(204)
@@ -525,34 +526,72 @@ func (s *Server) handlePeers(w http.ResponseWriter, r *http.Request) {
 func (s *Server) planReplicationLocked() {
 	log.Printf("[replication] planning for %d files", len(s.files))
 	for _, fe := range s.files {
-		needed := s.replicationFactor - len(fe.Peers)
-		if needed <= 0 || len(fe.Peers) == 0 {
-			if needed <= 0 {
-				log.Printf("[replication] file=%s already satisfies factor (have=%d need=%d)", fe.Info.Name, len(fe.Peers), s.replicationFactor)
-			}
+		latest := fe.Info.Version
+		if len(fe.Peers) == 0 {
+			// No source available
+			log.Printf("[replication] skip file=%s (no peers)", fe.Info.Name)
 			continue
 		}
-		var targets []shared.Peer
+
+		// Find peers that have latest version to use as source
+		var latestSources []shared.Peer
+		for pid := range fe.Peers {
+			if vmap, ok := s.peerFiles[pid]; ok {
+				if vmap[fe.Info.Name] == latest {
+					latestSources = append(latestSources, fe.Peers[pid])
+				}
+			}
+		}
+		if len(latestSources) == 0 {
+			// Fallback to any host if we don't have version info
+			var hostIDs []string
+			for id := range fe.Peers {
+				hostIDs = append(hostIDs, id)
+			}
+			sort.Strings(hostIDs)
+			latestSources = []shared.Peer{fe.Peers[hostIDs[0]]}
+		}
+		src := latestSources[0]
+
+		// Determine targets: missing peers and outdated peers
+		var addTargets []shared.Peer
+		var updateTargets []shared.Peer
 		for id, p := range s.peers {
-			if _, has := fe.Peers[id]; !has {
-				targets = append(targets, p)
+			// Skip peers that already have latest
+			if vmap, ok := s.peerFiles[id]; ok {
+				v := vmap[fe.Info.Name]
+				if v == 0 {
+					// missing
+					if _, has := fe.Peers[id]; !has {
+						addTargets = append(addTargets, p)
+					}
+				} else if v < latest {
+					updateTargets = append(updateTargets, p)
+				}
+			} else {
+				// No record for this peer => treat as missing
+				if _, has := fe.Peers[id]; !has {
+					addTargets = append(addTargets, p)
+				}
 			}
 		}
-		if len(targets) == 0 {
-			log.Printf("[replication] file=%s no eligible targets", fe.Info.Name)
-			continue
+		sort.Slice(addTargets, func(i, j int) bool { return addTargets[i].ID < addTargets[j].ID })
+		sort.Slice(updateTargets, func(i, j int) bool { return updateTargets[i].ID < updateTargets[j].ID })
+
+		// Respect replication factor for additions
+		neededAdds := s.replicationFactor - len(fe.Peers)
+		if neededAdds < 0 {
+			neededAdds = 0
 		}
-		sort.Slice(targets, func(i, j int) bool { return targets[i].ID < targets[j].ID })
-		var hostIDs []string
-		for id := range fe.Peers {
-			hostIDs = append(hostIDs, id)
-		}
-		sort.Strings(hostIDs)
-		src := fe.Peers[hostIDs[0]]
-		for i := 0; i < needed && i < len(targets); i++ {
-			peer := targets[i]
+		for i := 0; i < neededAdds && i < len(addTargets); i++ {
+			peer := addTargets[i]
 			s.queue[peer.ID] = append(s.queue[peer.ID], shared.ReplicationTask{File: fe.Info, SourcePeer: src})
-			log.Printf("[replication] enqueue peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
+			log.Printf("[replication] enqueue ADD peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
+		}
+		// Enqueue updates for outdated peers (not capped by factor)
+		for _, peer := range updateTargets {
+			s.queue[peer.ID] = append(s.queue[peer.ID], shared.ReplicationTask{File: fe.Info, SourcePeer: src})
+			log.Printf("[replication] enqueue UPDATE peer=%s file=%s src=%s", peer.ID, fe.Info.Name, src.ID)
 		}
 	}
 }
