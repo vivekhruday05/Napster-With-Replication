@@ -36,3 +36,48 @@
 2025-12-01 01:30:58,944 INFO -----------------------------
 2025-12-01 01:30:58,946 INFO Commands: search <q>, get <file>, update <file>, delete <file>, list, exit
 2025-12-01 01:34:51,036 INFO Exiting...
+2025-12-01 03:07:55,656 INFO --- Python Napster Client ---
+2025-12-01 03:07:55,657 INFO ID: peer-10.2.141.219-9000
+2025-12-01 03:07:55,657 INFO Dir: tmp/peer4
+2025-12-01 03:07:55,657 INFO Addr: http://10.2.141.219:9000
+2025-12-01 03:07:55,657 INFO Servers: ['http://10.2.141.219:8080', 'http://10.2.141.219:8081']
+2025-12-01 03:07:55,657 INFO Logs: /home/vivek/test/gitrepo/Napster-With-Replication/logs/peer-peer-10.2.141.219-9000.log
+2025-12-01 03:07:55,657 INFO -----------------------------
+2025-12-01 03:07:55,667 INFO Commands: search <q>, get <file>, update <file>, delete <file>, list, exit
+2025-12-01 03:08:58,984 INFO Exiting...
+2025-12-01 03:13:08,659 INFO --- Python Napster Client ---
+2025-12-01 03:13:08,659 INFO ID: peer-10.2.141.219-9000
+2025-12-01 03:13:08,659 INFO Dir: tmp/peer4
+2025-12-01 03:13:08,659 INFO Addr: http://10.2.141.219:9000
+2025-12-01 03:13:08,659 INFO Servers: ['http://10.2.141.219:8080', 'http://10.2.141.219:8081']
+2025-12-01 03:13:08,659 INFO Logs: /home/vivek/test/gitrepo/Napster-With-Replication/logs/peer-peer-10.2.141.219-9000.log
+2025-12-01 03:13:08,659 INFO -----------------------------
+2025-12-01 03:13:08,662 INFO Commands: search <q>, get <file>, update <file>, delete <file>, list, exit
+2025-12-01 03:13:17,993 INFO Exiting...
+2025-12-01 03:16:59,278 INFO --- Python Napster Client ---
+2025-12-01 03:16:59,278 INFO ID: peer-10.2.141.219-9000
+2025-12-01 03:16:59,278 INFO Dir: tmp/peer4
+2025-12-01 03:16:59,278 INFO Addr: http://10.2.141.219:9000
+2025-12-01 03:16:59,278 INFO Servers: ['http://10.2.141.219:8080', 'http://10.2.141.219:8081']
+2025-12-01 03:16:59,278 INFO Logs: /home/vivek/test/gitrepo/Napster-With-Replication/logs/peer-peer-10.2.141.219-9000.log
+2025-12-01 03:16:59,278 INFO -----------------------------
+2025-12-01 03:16:59,281 INFO Commands: search <q>, get <file>, update <file>, delete <file>, list, exit
+2025-12-01 03:17:25,708 INFO Exiting...
+2025-12-01 03:23:33,032 INFO --- Python Napster Client ---
+2025-12-01 03:23:33,032 INFO ID: peer-10.2.141.219-9000
+2025-12-01 03:23:33,032 INFO Dir: tmp/peer4
+2025-12-01 03:23:33,032 INFO Addr: http://10.2.141.219:9000
+2025-12-01 03:23:33,032 INFO Servers: ['http://10.2.141.219:8080', 'http://10.2.141.219:8081']
+2025-12-01 03:23:33,032 INFO Logs: /home/vivek/test/gitrepo/Napster-With-Replication/logs/peer-peer-10.2.141.219-9000.log
+2025-12-01 03:23:33,032 INFO -----------------------------
+2025-12-01 03:23:33,035 INFO Commands: search <q>, get <file>, update <file>, delete <file>, list, exit
+2025-12-01 03:25:01,127 INFO Exiting...
+2025-12-01 03:26:33,268 INFO --- Python Napster Client ---
+2025-12-01 03:26:33,268 INFO ID: peer-10.2.141.219-9000
+2025-12-01 03:26:33,268 INFO Dir: tmp/peer4
+2025-12-01 03:26:33,268 INFO Addr: http://10.2.141.219:9000
+2025-12-01 03:26:33,268 INFO Servers: ['http://10.2.141.219:8080', 'http://10.2.141.219:8081']
+2025-12-01 03:26:33,268 INFO Logs: /home/vivek/test/gitrepo/Napster-With-Replication/logs/peer-peer-10.2.141.219-9000.log
+2025-12-01 03:26:33,268 INFO -----------------------------
+2025-12-01 03:26:33,270 INFO Commands: search <q>, get <file>, update <file>, delete <file>, list, exit
+2025-12-01 03:29:26,134 INFO Exiting...
