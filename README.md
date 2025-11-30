@@ -1,77 +1,117 @@
 # Napster-With-Replication (Go)
 
-A minimal Napster-style P2P file sharing system with a central index server and basic file replication across peers, implemented in Go. The system consists of:
+A Napster-style P2P file sharing system with centralized indexing, primary/shadow master replication, lease-based write coordination, and automatic file replication across peers. Implemented in Go with a persistent interactive CLI.
 
-- server/: Central index that tracks which peers host which files, answers searches, and plans replication.
-- client/: Peer node that shares files over HTTP, registers with the server, searches, downloads, and performs replication tasks.
+The system consists of:
+- **server/**: Central index that tracks which peers host which files, answers searches, enforces leases, and plans replication.
+- **client/**: Peer node that shares files over HTTP, registers with the server, searches, downloads, performs replication tasks, and supports an interactive shell for continuous operation.
 
 This is a teaching/reference implementation: simple JSON over HTTP, in-memory state, no external dependencies, and designed to run locally or within a LAN.
 
-## System description
+---
 
-- Centralized Index (Napster model): A single server maintains a mapping of filename -> peers that currently host the file. Peers register their presence and file list and send periodic heartbeats.
-- Replication Planner: The server tries to keep at least R copies (replication factor) of each file by assigning replication tasks to peers that don't yet host the file.
-- Peer Nodes: Each peer runs a small HTTP server to expose files at /files and to serve downloads to other peers. Peers also periodically fetch and execute server-provided replication tasks.
-- Communication: All control-plane calls are JSON over HTTP. Data-plane (file content) is served via plain HTTP GET from peer to peer.
-# Napster-With-Replication
+## System Description
 
-A simple Napster-style file sharing system in Go with:
-
-- Primary/Shadow master replication (state sync via HTTP)
-- Lease-based write coordination (per-file write locks)
-- Versioned consistency (timestamp versions)
-- Heartbeat and stale peer pruning
-- Search and peer discovery
-- Automatic replication to satisfy a replication factor
-- Client-side failover across multiple servers
-
-This README explains architecture, endpoints, data formats, how to run locally and across multiple laptops, and comprehensive manual test cases.
+- **Centralized Index (Napster model)**: A primary server maintains a mapping of filename → peers that currently host the file. Peers register their presence and file list and send periodic heartbeats.
+- **Shadow Master Replication**: A standby shadow server receives real-time state synchronization from the primary via HTTP sync operations. Provides read-only failover for high availability.
+- **Lease-Based Consistency**: Per-file write locks (leases) enforce sequential consistency. A peer must acquire a 60-second lease before updating a file to prevent write conflicts.
+- **Versioned Files**: Files are tracked with timestamp-based versions. Higher versions are treated as authoritative.
+- **Replication Planner**: The server tries to keep at least R copies (replication factor) of each file by assigning replication tasks to peers that don't yet host the file.
+- **Heartbeat and Pruning**: Peers send heartbeats every 20 seconds. Peers that don't heartbeat within TTL (45s) are pruned from the index.
+- **Interactive CLI**: A persistent shell allows peers to execute commands (`search`, `get`, `update`, `list`) continuously without restarting the client.
+- **Peer Nodes**: Each peer runs a small HTTP server to expose files at `/files` and to serve downloads to other peers. Peers also periodically fetch and execute server-provided replication tasks.
+- **Communication**: All control-plane calls are JSON over HTTP. Data-plane (file content) is served via plain HTTP GET from peer to peer.
 
 ---
 
 ## Architecture
 
-- Server (Primary): authoritative state holder. Plans replication tasks, enforces leases, tracks peers/files.
-- Server (Shadow): standby state mirror receiving sync ops from primary (register/announce/heartbeat/prune). Read-only: rejects client write operations (`POST /register`, `POST /announce`, `POST /lease`, `POST /heartbeat`). Only accepts `POST /sync` from the Primary and serves read endpoints (`GET /search`, `GET /peers`, `GET /healthz`).
-- Client (Peer): hosts a small HTTP server to serve files. Registers with the master(s), heartbeats, pulls replication tasks, and announces file ownership. Supports update via lease.
+### Server Components
 
-Key concepts:
-- Replication factor: configurable via `NAPSTER_REPLICATION_FACTOR` (default 2).
-- Peer TTL: peers that don't heartbeat within TTL (45s) are pruned.
-- Heartbeats: clients send heartbeats every 20s to stay under TTL.
-- Leases: a peer acquires a lease before announcing a higher file version.
-- Versioning: servers treat higher version as authoritative (timestamp-based in client updates).
+- **Primary Server**: Authoritative state holder. Plans replication tasks, enforces leases, tracks peers/files, and synchronizes all state changes to the shadow.
+- **Shadow Server**: Standby state mirror receiving sync operations from primary via `POST /sync`. Read-only for clients: accepts only read operations (`GET /search`, `GET /peers`, `GET /healthz`) and rejects client writes (`POST /register`, `POST /announce`, `POST /lease`, `POST /heartbeat`) with `403 Forbidden`.
+
+### Client Components
+
+- **Peer Server**: Hosts a small HTTP server to serve files at `/files/<name>`. Exposes file listings at `GET /files`.
+- **Interactive Shell**: Persistent CLI that accepts commands in a loop without restarting the client process.
+- **Failover Logic**: Clients are configured with a comma-separated list of servers. If the primary fails (5xx error or timeout), the client automatically retries against the shadow.
+
+### Key Concepts
+
+- **Replication Factor**: Configurable via `NAPSTER_REPLICATION_FACTOR` (default: 2). The server ensures this many copies of each file exist across the network.
+- **Peer TTL**: Peers that don't heartbeat within 45 seconds are pruned from the index.
+- **Heartbeat Interval**: Clients send heartbeats every 20 seconds to stay active.
+- **Leases**: 60-second write locks acquired via `POST /lease` before announcing a higher file version.
+- **Versioning**: Servers treat higher versions as authoritative (timestamp-based in client updates).
 
 ---
 
-## Binaries and layout
+## Directory Structure
 
-- `./bin/server`: server binary
-- `./bin/client`: client binary
-- Client shares files from a directory (e.g. `tmp/peer1`)
+```
+.
+├── server/
+│   └── server.go           # Central index server implementation
+├── client/
+│   └── client.go           # Peer client implementation with interactive CLI
+├── bin/
+│   ├── server              # Compiled server binary
+│   └── client              # Compiled client binary
+├── tmp/                    # Default directory for peer file storage
+│   ├── peer1/
+│   ├── peer2/
+│   └── peer3/
+└── eval.py                 # Automated evaluation and benchmarking script
+```
 
 ---
 
-## Server configuration
+## Requirements
+
+- **Go** (1.18+)
+- **Python 3** (Optional, for evaluation script)
+
+---
+
+## Build
+
+```bash
+go build -o bin/server ./server
+go build -o bin/client ./client
+```
+
+---
+
+## Server Configuration
 
 Environment variables:
-- `NAPSTER_SERVER_ADDR`: address to bind (e.g. `:8080`). If empty, server picks a free port.
-- `NAPSTER_SHADOW_ADDR`: URL of shadow master (`http://host:port`). Set only on the primary.
-- `NAPSTER_REPLICATION_FACTOR`: desired replication factor (default: `2`).
 
-Examples:
-- Shadow-only server: `NAPSTER_SERVER_ADDR=":8081" ./bin/server`
-- Primary server with shadow: `NAPSTER_SHADOW_ADDR="http://localhost:8081" NAPSTER_SERVER_ADDR=":8080" ./bin/server`
+- `NAPSTER_SERVER_ADDR`: Address to bind (e.g., `:8080`). If empty, server picks a free port.
+- `NAPSTER_SHADOW_ADDR`: URL of shadow master (e.g., `http://localhost:8081`). Set only on the primary server.
+- `NAPSTER_REPLICATION_FACTOR`: Desired replication factor (default: `2`).
+
+**Examples:**
+
+Shadow-only server:
+```bash
+NAPSTER_SERVER_ADDR=":8081" ./bin/server
+```
+
+Primary server with shadow:
+```bash
+NAPSTER_SHADOW_ADDR="http://localhost:8081" NAPSTER_SERVER_ADDR=":8080" ./bin/server
+```
 
 ---
 
-## Client flags
+## Client Flags
 
-- `-server`: comma-separated list of servers (e.g., `http://localhost:8080,http://localhost:8081`)
-- `-dir`: shared directory (e.g., `tmp/peer1`)
-- `-bind`: bind address for peer server (e.g., `:9001`)
-- `-addr`: public address of peer (e.g., `http://localhost:9001`) — optional if bind is set; auto-fills IP:port.
-- `-cmd`: `serve`, `search`, `get`, `update`, `list`
+- `-server`: Comma-separated list of servers (e.g., `http://localhost:8080,http://localhost:8081`)
+- `-dir`: Shared directory for peer files (e.g., `tmp/peer1`)
+- `-bind`: Bind address for peer server (e.g., `:9001`)
+- `-addr`: Public address of peer (e.g., `http://localhost:9001`) — optional if bind is set; auto-fills IP:port
+- `-cmd`: Command to execute: `serve`, `search`, `get`, `update`, `list`
 
 ---
 
@@ -79,299 +119,400 @@ Examples:
 
 All endpoints return JSON unless noted. Content-Type for JSON requests must be `application/json`.
 
-### Server endpoints
+### Server Endpoints
 
+#### `POST /register`
+Register a peer and its files with the server.
+
+**Request:**
+```json
+{
+  "peer": {
+    "id": "peer1",
+    "addr": "http://localhost:9001",
+    "lastSeen": "2025-01-01T12:00:00Z"
+  },
+  "files": [
+    {
+      "name": "doc.txt",
+      "size": 1024,
+      "hash": "",
+      "version": 1234567890
+    }
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "ok": true,
+  "tasks": [
+    {
+      "file": { "name": "doc.txt", "size": 1024, "hash": "", "version": 1234567890 },
+      "sourcePeer": { "id": "peer1", "addr": "http://localhost:9001", "lastSeen": "..." }
+    }
+  ]
+}
+```
+
+**Notes:** Saves/updates peer and files. Returns replication tasks if the replication factor is not met.
+
+#### `POST /heartbeat`
+Extend peer liveness timestamp.
+
+**Request:**
+```json
+{
+  "peerId": "peer1"
+}
+```
+
+**Response:**
+```json
+{
+  "ok": true,
+  "tasks": []
+}
+```
+
+**Notes:** If `ok=false` (peer unknown), client should re-register.
+
+#### `POST /announce`
+Announce file ownership (used after downloads or updates).
+
+**Request:**
+```json
+{
+  "peer": { "id": "peer1", "addr": "http://localhost:9001", "lastSeen": "..." },
+  "file": { "name": "doc.txt", "size": 1024, "hash": "", "version": 1234567891 }
+}
+```
+
+**Response:** `204 No Content` on success; `403 Forbidden` if lease required and missing.
+
+**Notes:** If version increases, server verifies that the peer holds a valid lease for the file.
+
+#### `POST /lease`
+Acquire a write lock for a file.
+
+**Request:**
+```json
+{
+  "peerId": "peer1",
+  "fileName": "doc.txt"
+}
+```
+
+**Response:**
+```json
+{
+  "granted": true,
+  "expiration": "2025-01-01T12:01:00Z",
+  "message": "Lease granted"
+}
+```
+
+**Notes:** Grants a 60-second lease if available. Rejects with holder info if another peer holds the lease.
+
+#### `GET /search?q=<query>`
+Search for files matching the query string.
+
+**Response:**
+```json
+{
+  "matches": [
+    {
+      "file": { "name": "doc.txt", "size": 1024, "hash": "", "version": 1234567890 },
+      "peers": [
+        { "id": "peer1", "addr": "http://localhost:9001", "lastSeen": "..." }
+      ]
+    }
+  ]
+}
+```
+
+#### `GET /peers?file=<filename>`
+Get all peers hosting a specific file.
+
+**Response:**
+```json
+{
+  "file": { "name": "doc.txt", "size": 1024, "hash": "", "version": 1234567890 },
+  "peers": [
+    { "id": "peer1", "addr": "http://localhost:9001", "lastSeen": "..." }
+  ]
+}
+```
+
+**Notes:** Returns `404 Not Found` if file doesn't exist.
+
+#### `POST /sync` (Shadow Only)
+Receive state synchronization from primary.
+
+**Request:**
+```json
+{
+  "opType": "register",
+  "data": { ... }
+}
+```
+
+**Response:** `200 OK`
+
+**Notes:** Primary pushes operations (`register`, `announce`, `heartbeat`, `prune`). Shadow applies state mutations.
+
+#### `GET /healthz`
+Health check endpoint.
+
+**Response:** `200 OK`, body: `ok`
+
+### Shadow Write Policy
+
+The shadow server is strictly read-only for clients. The following endpoints return `403 Forbidden` on the shadow:
 - `POST /register`
-	- Request: `{ "peer": Peer, "files": [FileInfo] }`
-	- Response: `{ "ok": true, "tasks": [ReplicationTask] }`
-	- Notes: Saves/updates peer and files; planning replication tasks returned to requester.
-
-- `POST /heartbeat`
-	- Request: `{ "peerId": string }`
-	- Response: `{ "ok": boolean, "tasks": [ReplicationTask] }`
-	- Notes: Extends `LastSeen`. If `ok=false` (peer unknown), client should re-register.
-
 - `POST /announce`
-	- Request: `{ "peer": Peer, "file": FileInfo }`
-	- Response: `204 No Content` on success; `403 Forbidden` if lease required and missing.
-	- Notes: Used after replication pulls and updates. If version increases, server verifies lease.
-
 - `POST /lease`
-	- Request: `{ "peerId": string, "fileName": string }`
-	- Response: `{ "granted": boolean, "expiration": RFC3339 time, "message": string }`
-	- Notes: Grants 60s lease if available; reject with holder info otherwise.
+- `POST /heartbeat`
 
-- `GET /search?q=<query>`
-	- Response: `{ "matches": [ { "file": FileInfo, "peers": [Peer] } ] }`
+Clients should direct all writes to the primary. Reads automatically fail over to the shadow when the primary is unavailable.
 
-- `GET /peers?file=<filename>`
-	- Response: `{ "file": FileInfo, "peers": [Peer] }` or `404 Not Found`.
+### Client Endpoints (Peer Servers)
 
-- `POST /sync` (shadow only)
-	- Request: `{ "opType": "register"|"announce"|"heartbeat"|"prune", "data": RawJSON }`
-	- Response: `200 OK`
-	- Notes: Primary pushes operations; shadow applies state mutations.
+#### `GET /files`
+List all files shared by this peer.
 
-Shadow write policy:
-- Shadow server is strictly read-only for clients. The following endpoints return `403 Forbidden` on the shadow: `POST /register`, `POST /announce`, `POST /lease`, `POST /heartbeat`.
-- Clients should direct all writes to the Primary. Reads will fail over to the Shadow when needed.
-
-### New automated tests in `eval.py`
-
-- Shadow Read-Only Policy: Direct `POST` requests to the shadow for `/register`, `/announce`, `/lease`, `/heartbeat` should return `403`.
-- Failover with Shadow Read-Only: Crash primary, confirm shadow rejects writes; restart primary, confirm writes succeed again.
-
-### Implemented/affected server functions
-
-- `handleRegister` (server.go): rejects on shadow with `403`, plans replication on primary.
-- `handleAnnounce` (server.go): rejects on shadow with `403`, enforces lease on primary.
-- `handleLease` (server.go): rejects on shadow with `403`, grants 60s lease on primary.
-- `handleHeartbeat` (server.go): rejects on shadow with `403`; heartbeat state applied to shadow via `/sync` from primary.
-- `handleSync` (server.go): shadow applies primary's operations.
-
-- `GET /healthz`
-	- Response: `200 OK`, body `ok`
-
-### Client endpoints (peer servers)
-
-- `GET /files`
-	- Response: `[FileInfo]`
-
-- `GET /files/<name>`
-	- Response: file content stream (`200 OK`), or `404 Not Found`
-
-### Data structures
-
-`Peer`:
-```
-{
-	"id": string,
-	"addr": string,   // http://host:port
-	"lastSeen": RFC3339 time
-}
+**Response:**
+```json
+[
+  { "name": "doc.txt", "size": 1024, "hash": "", "version": 1234567890 }
+]
 ```
 
-`FileInfo`:
-```
-{
-	"name": string,
-	"size": number,
-	"hash": string,   // not currently set by client, reserved for future use
-	"version": number // timestamp version used for consistency
-}
-```
+#### `GET /files/<name>`
+Download a file from this peer.
 
-`ReplicationTask`:
-```
-{
-	"file": FileInfo,
-	"sourcePeer": Peer
-}
-```
-
-`RegisterResponse`:
-```
-{ "ok": true, "tasks": [ReplicationTask] }
-```
-
-`HeartbeatResponse`:
-```
-{ "ok": boolean, "tasks": [ReplicationTask] }
-```
-
-`LeaseRequest`/`LeaseResponse`:
-```
-// Request
-{ "peerId": string, "fileName": string }
-
-// Response
-{ "granted": boolean, "expiration": string, "message": string }
-```
-
-`SyncOp`:
-```
-{ "opType": "register"|"announce"|"heartbeat"|"prune", "data": RawJSON }
-```
+**Response:** File content stream (`200 OK`), or `404 Not Found`.
 
 ---
 
-## Build
+## Data Structures
 
+### `Peer`
+```json
+{
+  "id": "peer1",
+  "addr": "http://localhost:9001",
+  "lastSeen": "2025-01-01T12:00:00Z"
+}
 ```
-go build -o bin/server ./server
-go build -o bin/client ./client
+
+### `FileInfo`
+```json
+{
+  "name": "doc.txt",
+  "size": 1024,
+  "hash": "",
+  "version": 1234567890
+}
 ```
+
+**Notes:** Hash field is reserved for future use. Version is a timestamp for consistency tracking.
+
+### `ReplicationTask`
+```json
+{
+  "file": { "name": "doc.txt", "size": 1024, "hash": "", "version": 1234567890 },
+  "sourcePeer": { "id": "peer1", "addr": "http://localhost:9001", "lastSeen": "..." }
+}
+```
+
+### `SyncOp`
+```json
+{
+  "opType": "register",
+  "data": { ... }
+}
+```
+
+**opType values:** `register`, `announce`, `heartbeat`, `prune`
 
 ---
 
-## Run locally on a single laptop (localhost)
+## Usage Instructions
 
-1) Start shadow server:
-```
+### Scenario A: Local Testing (Single Laptop)
+
+Run everything on `localhost` using different ports.
+
+**1. Start the Server Cluster**
+
+Terminal 1 — Shadow Server:
+```bash
 NAPSTER_SERVER_ADDR=":8081" ./bin/server
 ```
 
-2) Start primary server with shadow:
-```
+Terminal 2 — Primary Server:
+```bash
 NAPSTER_SHADOW_ADDR="http://localhost:8081" NAPSTER_SERVER_ADDR=":8080" ./bin/server
 ```
 
-3) Start peers:
-```
+**2. Start Peers**
+
+Terminal 3 — Peer 1:
+```bash
 mkdir -p tmp/peer1 && echo "Content v1" > tmp/peer1/doc.txt
-./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" -dir tmp/peer1 -bind :9001 -addr "http://localhost:9001"
+./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" \
+             -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
+```
 
+Terminal 4 — Peer 2:
+```bash
 mkdir -p tmp/peer2
-./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" -dir tmp/peer2 -bind :9002 -addr "http://localhost:9002"
+./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" \
+             -dir tmp/peer2 -bind :9002 -addr http://localhost:9002
+```
 
+Terminal 5 — Peer 3:
+```bash
 mkdir -p tmp/peer3
-./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" -dir tmp/peer3 -bind :9003 -addr "http://localhost:9003"
+./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" \
+             -dir tmp/peer3 -bind :9003 -addr http://localhost:9003
 ```
 
-4) Observe logs for registration, heartbeat, replication tasks, and announce.
+**3. Observe Logs**
 
-5) Search and get:
+Watch for registration, heartbeat, replication tasks, and announce operations in the server and client logs.
+
+**4. Interactive CLI Commands**
+
+Once a peer is running in serve mode, the interactive shell accepts the following commands:
+
+| Command | Usage | Description |
+|---------|-------|-------------|
+| `list` | `list` | Shows files currently in your local shared folder. |
+| `search` | `search <query>` | Asks the server who has a file. Returns a list of peers. |
+| `get` | `get <filename>` | Downloads the file from a peer and announces it to the server. |
+| `update` | `update <filename>` | Acquires a write lease, simulates an edit, and publishes version v+1. |
+| `help` | `help` | Displays the list of available commands. |
+| `exit` | `exit` | Closes the client. |
+
+**Example Session:**
 ```
-./bin/client -cmd search -server "http://localhost:8080,http://localhost:8081" -dir tmp/peer2 -bind :9002 -addr "http://localhost:9002" doc
-./bin/client -cmd get -server "http://localhost:8080,http://localhost:8081" -dir tmp/peer3 -bind :9003 -addr "http://localhost:9003" doc.txt
+> list
+Files in tmp/peer2:
+  doc.txt (12 bytes)
+
+> search doc
+Found 1 matches:
+  doc.txt (12 bytes, v1234567890)
+    Hosted by: peer1 (http://localhost:9001)
+
+> get doc.txt
+Downloading doc.txt from peer1...
+Download complete. Announced to server.
+
+> update doc.txt
+Acquiring lease for doc.txt...
+Lease granted. Updating file...
+Update complete. Version: 1234567900
+
+> exit
+Goodbye!
 ```
 
-6) Update with lease (on peer1):
-```
-./bin/client -cmd update -server "http://localhost:8080,http://localhost:8081" -dir tmp/peer1 -bind :9001 -addr "http://localhost:9001" doc.txt
-```
-This will acquire a lease and announce a higher version.
+### Scenario B: Distributed Testing (Multiple Laptops)
 
----
+Run servers on one machine and peers on different machines connected to the same Wi-Fi/LAN.
 
-## Run across multiple laptops
+**1. Setup Server Machine (e.g., IP: 192.168.1.10)**
 
-Assume Laptop A (shadow) and Laptop B (primary) are on the same LAN.
-
-1) On Laptop A (Shadow):
-- Find LAN IP (e.g., `192.168.1.10`).
-```
+Terminal 1 — Shadow Server:
+```bash
 NAPSTER_SERVER_ADDR=":8081" ./bin/server
 ```
-Take note of public URL printed (e.g., `http://192.168.1.10:8081`).
 
-2) On Laptop B (Primary):
-- Find LAN IP (e.g., `192.168.1.11`).
-```
+Terminal 2 — Primary Server:
+```bash
 NAPSTER_SHADOW_ADDR="http://192.168.1.10:8081" NAPSTER_SERVER_ADDR=":8080" ./bin/server
 ```
-Take note of public URL printed (e.g., `http://192.168.1.11:8080`).
 
-3) On any laptops running peers (A or B):
-- Use `-server` listing both servers with their LAN IPs:
-```
+**Note:** `:8080` and `:8081` bind to all network interfaces, so they are accessible from other laptops.
+
+**2. Setup Laptop 2 (Peer A) (e.g., IP: 192.168.1.20)**
+
+```bash
+mkdir -p tmp/peerA && echo "Content from Laptop 2" > tmp/peerA/doc.txt
 ./bin/client -cmd serve \
-	-server "http://192.168.1.11:8080,http://192.168.1.10:8081" \
-	-dir tmp/peerX \
-	-bind :900X \
-	-addr "http://<this_laptop_ip>:900X"
+             -server "http://192.168.1.10:8080,http://192.168.1.10:8081" \
+             -dir tmp/peerA \
+             -bind :9001 \
+             -addr http://192.168.1.20:9001
 ```
-- Ensure firewall rules allow inbound on peer ports (900X) and servers (8080/8081).
 
-4) Testing is the same: search, get, update using the public addresses.
+**Note:** `-addr` must be THIS laptop's IP so other peers can download from it.
 
----
+**3. Setup Laptop 3 (Peer B) (e.g., IP: 192.168.1.30)**
 
-## Comprehensive manual test cases
+```bash
+mkdir -p tmp/peerB
+./bin/client -cmd serve \
+             -server "http://192.168.1.10:8080,http://192.168.1.10:8081" \
+             -dir tmp/peerB \
+             -bind :9001 \
+             -addr http://192.168.1.30:9001
+```
 
-1) Registration and initial replication
-- Setup: Peer1 has `doc.txt`; Peer2 and Peer3 are empty.
-- Action: Start servers, start peers.
-- Expect: Primary logs `[register]` and replication planning; Peer2 pulls `doc.txt` from Peer1 and announces; Peer3 may pull if replication factor demands.
+**4. Firewall Configuration**
 
-2) Heartbeat stability
-- Action: Observe client logs every ~20s; verify server `[heartbeat] ok=true` and no `[prune]` for active peers.
-- Edge: Temporarily stop Peer2 for >45s; expect `[prune]` on server removing Peer2 and its file mapping.
+Ensure firewall rules allow inbound connections on:
+- Server ports: `8080`, `8081`
+- Peer ports: `9001`, `9002`, `9003`, etc.
 
-3) Failover to shadow master
-- Action: Shut down primary temporarily; clients continue using shadow for reads and lookups.
-- Expect: Client logs show retries and successes against the shadow; `[shadow] handleSync` continues to apply operations when primary is back.
+**5. Testing**
 
-4) Lease enforcement on update
-- Action: On Peer1, run `update doc.txt`.
-- Expect: `[lease] granted` then `[announce] ok` with increasing version.
-- Edge: Try announcing a higher version from Peer2 without lease; server returns `403` and logs `[announce] rejected: lease missing/expired`.
-
-5) Search and Get
-- Action: Run `search doc`; expect matches with peers listed.
-- Action: On Peer3, run `get doc.txt`; expect download from one listed peer and subsequent announce.
-
-6) Stale prune correctness
-- Action: Start Peer2, then kill it; after TTL (~45s), server `prune` logs show removal. Ensure files hosted solely by Peer2 are unlisted in searches.
-
-7) Replication factor
-- Setup: Set `NAPSTER_REPLICATION_FACTOR=3` on primary. Start 3 peers.
-- Action: Register peers; server logs show planning for all files to reach factor 3; tasks enqueued accordingly.
-
-8) Multi-host LAN scenario
-- Action: Run servers on two laptops (shadow and primary) with LAN IPs; start peers across machines.
-- Expect: Registration and replication work across network; search/get/update function with public addresses; logs indicate cross-host pulls.
-
-9) Error handling and failover paths
-- Action: Temporarily block one server; client logs `[client] request ... -> will try next` and then success with the other.
-- Edge: Send bad JSON to server endpoints (use curl) to see `[bad json]` logs and 400 responses.
-
-10) Large number of peers/files (sanity)
-- Action: Run multiple peer processes on one machine with different dirs; add several files; observe replication planning and queue behavior in logs.
+Use the interactive CLI on any peer to search, get, and update files across the distributed network.
 
 ---
-
-## Troubleshooting
-
-- If a peer is pruned unexpectedly, confirm heartbeats every ~20s and that `LastSeen` is being updated; check `[announce]` logs to ensure `LastSeen` isn’t overwritten with zero.
-- If lease updates fail, ensure you’re using `-cmd update` which requests a lease before announcing higher versions.
-- For multi-laptop setups, verify IP addressing and firewall rules on both peers and servers.
-- Use `GET /healthz` on servers to confirm they’re up.
-
----
-
-## Notes
-
-- Hash field in `FileInfo` is currently unused; you can extend the client to compute hashes to improve content integrity.
-- Shadow master pruning is simplified; the primary is authoritative. Heartbeats are synced to shadow to reduce accidental stale pruning.
-- Timeouts: client download uses a 10s timeout; adjust if pulling large files over slow networks.
-
 
 ## CLI Commands
 
-The client supports several commands via the `-cmd` flag. Each command requires a server and directory.
+The client supports several commands via the `-cmd` flag or through the interactive shell.
 
-### `serve` — Run as a peer node
-Starts the peer in server mode: registers with the central server, shares files, sends heartbeats, and executes replication tasks.
+### `serve` — Run as a Peer Node
+Starts the peer in server mode: registers with the central server, shares files, sends heartbeats, executes replication tasks, and provides an interactive shell.
 
 ```bash
-./bin/client -cmd serve -server http://localhost:8080 -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
+./bin/client -cmd serve -server http://localhost:8080,http://localhost:8081 \
+             -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
 ```
 
-### `search <query>` — Find files
+### `search <query>` — Find Files
 Searches the network for files matching the query string.
 
 ```bash
 ./bin/client -cmd search -server http://localhost:8080 -dir tmp/peer1 doc
 ```
-Output: Lists matching files and which peers host them.
 
-### `get <filename>` — Download a file
+**Output:** Lists matching files and which peers host them.
+
+### `get <filename>` — Download a File
 Downloads a file from the network and saves it to your local directory.
 
 ```bash
 ./bin/client -cmd get -server http://localhost:8080 -dir tmp/peer1 doc.txt
 ```
-The file is pulled from a peer and announced to the server.
 
-### `list` — List local files
+**Note:** The file is pulled from a peer and announced to the server.
+
+### `list` — List Local Files
 Shows all files in your shared directory.
 
 ```bash
 ./bin/client -cmd list -server http://localhost:8080 -dir tmp/peer1
 ```
 
-### `update <filename>` — Update a file (requires write lock)
+### `update <filename>` — Update a File (Requires Write Lock)
 Acquires a lease, then announces a higher version to coordinate writes across peers.
 
 ```bash
@@ -380,30 +521,146 @@ Acquires a lease, then announces a higher version to coordinate writes across pe
 
 ---
 
-## Quick Start (3 terminals)
+## Quick Start (3 Terminals)
 
 **Terminal 1 — Start Shadow Server:**
 ```bash
 NAPSTER_SERVER_ADDR=":8081" ./bin/server
 ```
 
-**Terminal 2 — Start Peer 1:**
+**Terminal 2 — Start Primary Server:**
+```bash
+NAPSTER_SHADOW_ADDR="http://localhost:8081" NAPSTER_SERVER_ADDR=":8080" ./bin/server
+```
+
+**Terminal 3 — Start Peer with Interactive Shell:**
 ```bash
 mkdir -p tmp/peer1 && echo "Content v1" > tmp/peer1/doc.txt
-./bin/client -cmd serve -server http://localhost:8081 -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
+./bin/client -cmd serve -server "http://localhost:8080,http://localhost:8081" \
+             -dir tmp/peer1 -bind :9001 -addr http://localhost:9001
 ```
 
-**Terminal 3 — Start Peer 2:**
-```bash
-mkdir -p tmp/peer2
-./bin/client -cmd serve -server http://localhost:8081 -dir tmp/peer2 -bind :9002 -addr http://localhost:9002
+In the interactive shell, try:
+```
+> list
+> search doc
+> help
+> exit
 ```
 
-Then in another terminal, try commands like:
+---
+
+## Comprehensive Manual Test Cases
+
+### 1. Registration and Initial Replication
+**Setup:** Peer1 has `doc.txt`; Peer2 and Peer3 are empty.
+
+**Action:** Start servers, start peers.
+
+**Expect:** Primary logs `[register]` and replication planning. Peer2 pulls `doc.txt` from Peer1 and announces. Peer3 may pull if replication factor demands.
+
+### 2. Heartbeat Stability
+**Action:** Observe client logs every ~20s; verify server `[heartbeat] ok=true` and no `[prune]` for active peers.
+
+**Edge Case:** Temporarily stop Peer2 for >45s; expect `[prune]` on server removing Peer2 and its file mapping.
+
+### 3. Failover to Shadow Master
+**Action:** Shut down primary temporarily; clients continue using shadow for reads and lookups.
+
+**Expect:** Client logs show retries and successes against the shadow. `[shadow] handleSync` continues to apply operations when primary is back.
+
+### 4. Lease Enforcement on Update
+**Action:** On Peer1, run `update doc.txt` in the interactive shell.
+
+**Expect:** `[lease] granted` then `[announce] ok` with increasing version.
+
+**Edge Case:** Try announcing a higher version from Peer2 without lease; server returns `403` and logs `[announce] rejected: lease missing/expired`.
+
+### 5. Search and Get
+**Action:** Run `search doc` in the interactive shell; expect matches with peers listed.
+
+**Action:** On Peer3, run `get doc.txt`; expect download from one listed peer and subsequent announce.
+
+### 6. Stale Prune Correctness
+**Action:** Start Peer2, then kill it; after TTL (~45s), server `prune` logs show removal.
+
+**Expect:** Files hosted solely by Peer2 are unlisted in searches.
+
+### 7. Replication Factor
+**Setup:** Set `NAPSTER_REPLICATION_FACTOR=3` on primary. Start 3 peers.
+
+**Action:** Register peers; server logs show planning for all files to reach factor 3; tasks enqueued accordingly.
+
+### 8. Multi-Host LAN Scenario
+**Action:** Run servers on two laptops (shadow and primary) with LAN IPs; start peers across machines.
+
+**Expect:** Registration and replication work across network; search/get/update function with public addresses; logs indicate cross-host pulls.
+
+### 9. Error Handling and Failover Paths
+**Action:** Temporarily block one server; client logs `[client] request ... -> will try next` and then success with the other.
+
+**Edge Case:** Send bad JSON to server endpoints (use curl) to see `[bad json]` logs and 400 responses.
+
+### 10. Large Number of Peers/Files (Sanity)
+**Action:** Run multiple peer processes on one machine with different dirs; add several files; observe replication planning and queue behavior in logs.
+
+### 11. Interactive CLI Persistence
+**Action:** Start a peer in serve mode and execute multiple commands without restarting.
+
+**Expect:** Shell remains active. Commands like `list`, `search`, `get`, `update` execute sequentially without client restart.
+
+### 12. Shadow Read-Only Policy
+**Action:** Use curl to send `POST /register` directly to the shadow server.
+
+**Expect:** `403 Forbidden` response. Client logs should show automatic retry against the primary.
+
+---
+
+## Evaluation and Metrics
+
+The system includes an evaluation suite (`eval.py`) to benchmark performance.
+
+**Metrics:**
+- **Throughput:** Requests processed per second.
+- **Latency:** Time taken for `register`, `search`, and `download`.
+- **Scalability:** Performance behavior as peer count increases (10, 50, 100 peers).
+- **Failover Time:** Time taken to switch from primary to shadow during failure.
+- **Replication Efficiency:** Time taken to achieve replication factor across peers.
+
+**Running the Evaluation:**
 ```bash
-./bin/client -cmd search -server http://localhost:8081 -dir tmp/peer2 doc
-./bin/client -cmd get -server http://localhost:8081 -dir tmp/peer2 doc.txt
-./bin/client -cmd list -server http://localhost:8081 -dir tmp/peer2
+python3 eval.py
 ```
+
+**Automated Tests:**
+- Shadow Read-Only Policy: Direct `POST` requests to the shadow for `/register`, `/announce`, `/lease`, `/heartbeat` should return `403`.
+- Failover with Shadow Read-Only: Crash primary, confirm shadow rejects writes; restart primary, confirm writes succeed again.
+
+---
+
+## Troubleshooting
+
+**Peer Pruned Unexpectedly:**
+- Confirm heartbeats are sent every ~20s.
+- Check that `LastSeen` is being updated in server logs.
+- Ensure `[announce]` logs don't overwrite `LastSeen` with zero.
+
+**Lease Update Fails:**
+- Ensure you're using the `update` command which requests a lease before announcing higher versions.
+- Check server logs for `[lease]` entries.
+
+**Multi-Laptop Setup Issues:**
+- Verify IP addressing: use `ifconfig` or `ipconfig` to confirm LAN IPs.
+- Check firewall rules on both peers and servers.
+- Test connectivity with `curl http://<server-ip>:8080/healthz`.
+
+**Downloads Timeout:**
+- Client download uses a 10-second timeout. Adjust if pulling large files over slow networks.
+- Check that peer servers are listening on the correct ports.
+
+**Shadow Not Syncing:**
+- Confirm `NAPSTER_SHADOW_ADDR` is set correctly on the primary.
+- Check primary logs for `[sync]` entries.
+- Verify shadow logs show `[shadow] handleSync` operations.
 
 ---
