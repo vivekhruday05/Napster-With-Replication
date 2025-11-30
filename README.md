@@ -393,7 +393,7 @@ Once a peer is running in serve mode, the interactive shell accepts the followin
 | `list` | `list` | Shows files currently in your local shared folder. |
 | `search` | `search <query>` | Asks the server who has a file. Returns a list of peers. |
 | `get` | `get <filename>` | Downloads the file from a peer and announces it to the server. |
-| `update` | `update <filename>` | Acquires a write lease, simulates an edit, and publishes version v+1. |
+| `update` | `update <filename>` | Acquires a write lease, opens editor, user edits and saves, and publishes version v+1. |
 | `help` | `help` | Displays the list of available commands. |
 | `exit` | `exit` | Closes the client. |
 
