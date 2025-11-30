@@ -49,6 +49,10 @@ func NewServer() *Server {
 	}
 	// NEW: Read Shadow Address from Env
 	shadow := os.Getenv("NAPSTER_SHADOW_ADDR")
+	// Normalize: ensure scheme present for HTTP client
+	if shadow != "" && !strings.HasPrefix(shadow, "http://") && !strings.HasPrefix(shadow, "https://") {
+		shadow = "http://" + shadow
+	}
 
 	s := &Server{
 		replicationFactor: replica,

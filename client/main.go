@@ -18,6 +18,23 @@ func main() {
 	cmd := flag.String("cmd", "serve", "serve, search, get, update, or list")
 	flag.Parse()
 
+	// User mistake recovery: if running 'serve' and forgot -server but supplied addresses as positional arg.
+	if *cmd == "serve" && *servers == "http://localhost:8080" { // still default
+		args := flag.Args()
+		if len(args) > 0 {
+			candidate := args[0]
+			// Heuristic: looks like a URL list if contains 'http://' and maybe comma
+			if strings.Contains(candidate, "http://") || strings.Contains(candidate, "https://") {
+				log.Printf("[warning] treating positional argument %q as -server value; please use -server explicitly", candidate)
+				*servers = candidate
+				// Remove it from args so subsequent logic (search/get/update) isn't confused in other commands
+				if len(args) > 1 {
+					// Reconstruct remaining args in flag package isn't possible; we just rely on flag.Args() usage below.
+				}
+			}
+		}
+	}
+
 	if *peerAddr == "" {
 		ip, err := shared.GetLocalIP()
 		if err != nil {
